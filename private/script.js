@@ -1,4 +1,5 @@
 console.log(window.localStorage)
+
 const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
 

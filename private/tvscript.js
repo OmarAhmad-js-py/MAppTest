@@ -128,9 +128,7 @@ function getSeasons() {
 
 
 
-function newFunction() {
-    $.ajax;
-}
+
 
 function showMovies() {
 
@@ -201,7 +199,7 @@ function tvshow_getRec() {
 
 
     fetch(BASE_URL + '/tv/' + id + "/recommendations?" + API_KEY).then((res) => res.json()).then((data) => {
-
+        console.log(data)
         const info = data.results[0];
         const info1 = data.results[1];
         const info2 = data.results[2];
@@ -249,23 +247,39 @@ tvshow_getRec();
 async function sendtoBackend() {
     const showid = id
 
+    if (localStorage.getItem("Watchlist") == null) {
+        localStorage.setItem("Watchlist", "[]")
+    }
+
+    const normale = JSON.stringify(localStorage.getItem("Watchlist"))
+    const newString = normale.replace(' \ ', '');
+    console.log(newString)
     watchlist.addEventListener("click", function (e) {
         e.preventDefault();
+
+
+
+        const StoredWatchlist = JSON.parse(localStorage.getItem("Watchlist"))
+        StoredWatchlist.push(id)
+
+        localStorage.setItem("Watchlist", JSON.stringify(StoredWatchlist))
+
+        console.log(JSON.stringify(localStorage.getItem("Watchlist")));
+
+        console.log(localStorage.getItem("Watchlist"))
 
         const options = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                id: `${showid}`
-            })
+            body: localStorage.getItem("Watchlist")
         }
 
 
         fetch("/watchlistAPI", options).then(res => {
             console.log(res)
-            console.log("it works?")
+
         })
 
     })
@@ -273,5 +287,12 @@ async function sendtoBackend() {
 
 }
 sendtoBackend();
+
+
+
+
+
+
+
 
 

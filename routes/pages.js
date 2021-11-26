@@ -5,6 +5,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const { json } = require('body-parser');
+const { response } = require('express');
 
 
 const db = mysql.createConnection({
@@ -13,8 +14,7 @@ const db = mysql.createConnection({
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE
 });
-const showid = authController.login
-console.log(showid.id);
+
 
 router.get("/", authController.isLoggedIn, (req, res) => {
     res.render("index", {
@@ -122,11 +122,41 @@ router.get("/singletvshow", authController.isLoggedIn, (req, res) => {
 
 
 
-router.post("/watchlistAPI", authController.isLoggedIn, (req, res) => {
-
+router.post("/watchlistAPI", authController.isLoggedIn, async (req, res) => {
+    const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
     console.log("The id is")
-    console.log(res.body);
-    res.send(res.json());
+    console.log(req.body);
+    const WatchlistID = []
+    WatchlistID.push(JSON.stringify(req.body))
+
+
+    db.query("UPDATE users SET Watchlist = ? WHERE id = ? ", [WatchlistID, decoded.id], (err, result) => {
+        if (!err) {
+            res.redirect("/Login");
+        } else {
+            res.status(500).send(err);
+            console.log(err);
+        }
+    });
+})
+
+router.get("/Watchlist", authController.isLoggedIn, (req, res) => {
+    if (req.user) {
+
+        res.render("Watchlist", {
+            user: req.user,
+
+        })
+
+    } else {
+        res.redirect("/login");
+    }
+
+})
+
+router.get("/Wathclater", authController.isLoggedIn, (req, res) => {
+    console.log(req.user)
+    res.json(req.user)
 })
 
 

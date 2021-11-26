@@ -1,3 +1,4 @@
+
 const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_URL = BASE_URL + "/trending/tv/week?" + API_KEY;
