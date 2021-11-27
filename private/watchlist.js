@@ -36,6 +36,7 @@ function getwatchlistData() {
     .then((res) => res.json())
     .then((data) => {
       getWatchlist(data)
+      console.log(data)
     })
     .catch((err) => {
       console.log("ERROR: " + err.message)

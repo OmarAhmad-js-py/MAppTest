@@ -134,6 +134,7 @@ nav {
 }
 
 .main_desc {
+  margin-left: 0.5rem;
   display: contents;
 }
 
@@ -748,6 +749,7 @@ nav .breadcrumb {
   color: #fff;
 }
 .movie-buttons {
+  padding-left: 250px;
   margin-bottom: -50px;
 }
 
@@ -787,7 +789,9 @@ header {
   background: #c90087;
   color: #fff;
 }
-
+.test {
+  margin-left: 400px;
+}
 .btn-recommend:hover {
   background: #e52da9;
 }

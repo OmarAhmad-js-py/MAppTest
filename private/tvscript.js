@@ -75,6 +75,7 @@ const genre = [
 ]
 
 const watchlist = document.getElementById("watchlist");
+const recommend = document.getElementById("recommend")
 const mainEl = document.getElementById("main");
 const iframe = document.getElementById("tvshow");
 const form = document.getElementById("form");
@@ -244,16 +245,15 @@ function tvshow_getRec() {
 }
 tvshow_getRec();
 
-async function sendtoBackend() {
+async function sendWatchList() {
     const showid = id
 
     if (localStorage.getItem("Watchlist") == null) {
         localStorage.setItem("Watchlist", "[]")
     }
 
-    const normale = JSON.stringify(localStorage.getItem("Watchlist"))
-    const newString = normale.replace(' \ ', '');
-    console.log(newString)
+
+
     watchlist.addEventListener("click", function (e) {
         e.preventDefault();
 
@@ -286,13 +286,45 @@ async function sendtoBackend() {
 
 
 }
-sendtoBackend();
+sendWatchList();
+
+function sendRecommended() {
+    const showid = id
+
+    if (localStorage.getItem("Recommended") == null) {
+        localStorage.setItem("Recommended", "[]")
+    }
+
+    recommend.addEventListener("click", function (e) {
+        e.preventDefault();
 
 
 
+        const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"))
+        StoredRecommended.push(id)
+
+        localStorage.setItem("Recommended", JSON.stringify(StoredRecommended))
+
+        console.log(JSON.stringify(localStorage.getItem("Recommended")));
+
+        console.log(localStorage.getItem("Recommended"))
+
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: localStorage.getItem("Recommended")
+        }
 
 
+        fetch("/Recommended", options).then(res => {
+            console.log(res)
+
+        })
+
+    })
+}
 
 
-
-
+sendRecommended();

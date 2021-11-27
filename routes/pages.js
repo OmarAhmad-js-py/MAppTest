@@ -43,6 +43,25 @@ router.get("/profile", authController.isLoggedIn, (req, res) => {
 
 
 });
+router.post("/Recommended", authController.isLoggedIn, async (req, res) => {
+    const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+    console.log("The id is")
+    console.log(req.body);
+    const RecommendedlistID = []
+    RecommendedlistID.push(JSON.stringify(req.body))
+
+
+    db.query("UPDATE users SET Recommended = ? WHERE id = ? ", [RecommendedlistID, decoded.id], (err, result) => {
+        if (err) {
+            res.redirect(authController.logout, "/Login");
+        } else {
+            res.status(500).send(err);
+            console.log(err);
+        }
+    });
+
+
+})
 
 
 router.post("/send", authController.isLoggedIn, async (req, res) => {
@@ -52,6 +71,7 @@ router.post("/send", authController.isLoggedIn, async (req, res) => {
     console.log(decoded.id)
     let profileImg;
     let uploadPath;
+    console.log(req.body)
 
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
@@ -131,11 +151,11 @@ router.post("/watchlistAPI", authController.isLoggedIn, async (req, res) => {
 
 
     db.query("UPDATE users SET Watchlist = ? WHERE id = ? ", [WatchlistID, decoded.id], (err, result) => {
-        if (!err) {
-            res.redirect("/Login");
-        } else {
-            res.status(500).send(err);
+        if (err) {
+            res.redirect(authController.logout, "/Login").send(err);
             console.log(err);
+        } else {
+            res.status(500)
         }
     });
 })
