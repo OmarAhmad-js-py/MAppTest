@@ -73,7 +73,13 @@
           {{/if}}
 
         </ul>
+        {{#if user}}
+          <div class="profile-pic">
+            <img src="{{user.profile_img}}" id="output" width="200" ></img>
+          </div>
+        {{else}}
 
+        {{/if}}
       </div>
     </nav>
 

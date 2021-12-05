@@ -260,13 +260,18 @@ async function sendWatchList() {
 
 
         const StoredWatchlist = JSON.parse(localStorage.getItem("Watchlist"))
-        StoredWatchlist.push(id)
+        if (!StoredWatchlist.includes(id)) {
+            StoredWatchlist.push(id)
+            localStorage.setItem("Watchlist", JSON.stringify(StoredWatchlist))
 
-        localStorage.setItem("Watchlist", JSON.stringify(StoredWatchlist))
+            console.log(JSON.stringify(localStorage.getItem("Watchlist")));
 
-        console.log(JSON.stringify(localStorage.getItem("Watchlist")));
+            console.log(localStorage.getItem("Watchlist"))
 
-        console.log(localStorage.getItem("Watchlist"))
+        } else {
+            return false;
+        }
+
 
         const options = {
             method: "POST",
@@ -301,13 +306,18 @@ function sendRecommended() {
 
 
         const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"))
-        StoredRecommended.push(id)
+        if (!StoredRecommended.includes(id)) {
+            StoredRecommended.push(id)
 
-        localStorage.setItem("Recommended", JSON.stringify(StoredRecommended))
+            localStorage.setItem("Recommended", JSON.stringify(StoredRecommended))
 
-        console.log(JSON.stringify(localStorage.getItem("Recommended")));
+            console.log(JSON.stringify(localStorage.getItem("Recommended")));
 
-        console.log(localStorage.getItem("Recommended"))
+            console.log(localStorage.getItem("Recommended"))
+
+        } else {
+            return false;
+        }
 
         const options = {
             method: "POST",

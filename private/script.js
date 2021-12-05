@@ -138,6 +138,8 @@ function setGenre() {
                 }
             }
             console.log(selectedGenre)
+            console.log(encodeURI(selectedGenre.
+                join(',')))
             getMovies(API_URL + '&with_genres=' + encodeURI(selectedGenre.
                 join(',')))
             highlightSelections();

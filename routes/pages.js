@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const { json } = require('body-parser');
 const { response } = require('express');
-
+var diff = require("fast-array-diff");
+var removeValue = require('remove-value');
 
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
@@ -63,6 +64,41 @@ router.post("/Recommended", authController.isLoggedIn, async (req, res) => {
 
 })
 
+router.post("/delRW", authController.isLoggedIn, async (req, res) => {
+
+    if (req.user) {
+        const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+        const watchlistid = JSON.parse(req.user.Watchlist)
+        const delTMD = JSON.parse(`["${req.body}"]`)
+
+
+        db.query("SELECT Watchlist FROM users WHERE id = ? ", [decoded.id], async (err, result) => {
+            if (err) {
+                console.log(err)
+            } else {
+                const teditem = diff.same(watchlistid, delTMD)
+                const deleteditem = `'[${teditem}]'`.replace(/[\[\]']+/g, "")
+                // console.log(deleteditem)
+
+                const Changewatchlist = removeValue(watchlistid, deleteditem)
+                const newwatchlist = []
+                newwatchlist.push(JSON.stringify(Changewatchlist))
+                console.log(newwatchlist)
+                db.query("UPDATE users SET Watchlist = ? WHERE id = ? ", [newwatchlist, decoded.id], (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(result)
+                        res.status(500)
+                    }
+                });
+
+            }
+        })
+    } else {
+        res.redirect("/login");
+    }
+})
 
 router.post("/send", authController.isLoggedIn, async (req, res) => {
 
@@ -148,6 +184,7 @@ router.post("/watchlistAPI", authController.isLoggedIn, async (req, res) => {
     console.log(req.body);
     const WatchlistID = []
     WatchlistID.push(JSON.stringify(req.body))
+    console.log(WatchlistID)
 
 
     db.query("UPDATE users SET Watchlist = ? WHERE id = ? ", [WatchlistID, decoded.id], (err, result) => {
@@ -155,6 +192,7 @@ router.post("/watchlistAPI", authController.isLoggedIn, async (req, res) => {
             res.redirect(authController.logout, "/Login").send(err);
             console.log(err);
         } else {
+            console.log(result);
             res.status(500)
         }
     });
@@ -175,10 +213,23 @@ router.get("/Watchlist", authController.isLoggedIn, (req, res) => {
 })
 
 router.get("/Wathclater", authController.isLoggedIn, (req, res) => {
-    console.log(req.user)
+
     res.json(req.user)
 })
 
+router.get("/page", authController.isLoggedIn, (req, res) => {
+    if (req.user) {
+
+        res.render("page", {
+            user: req.user,
+
+        })
+
+    } else {
+        res.redirect("/login");
+    }
+
+})
 
 
 

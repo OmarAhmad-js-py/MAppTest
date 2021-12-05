@@ -35,6 +35,7 @@
 
     </div>
   </nav>
+  
 
   <div class="container">
     <div class="main-body">
@@ -51,8 +52,13 @@
                 <form action="/send" id="myform" method="POST" enctype="multipart/form-data">
                 <input id="file" type="file" name="profileImg" accept="image/*" />
                 </form>
+                {{#if user.profile_img}}
                 <img src="{{user.profile_img}}" id="output"
                   width="200" />
+                  {{else}}
+                   <img src="../avatar.png" id="output"
+                  width="200" />
+                  {{/if}}
               </div>
 
               <div class="mt-3">

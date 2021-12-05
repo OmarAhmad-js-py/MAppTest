@@ -127,7 +127,7 @@ function setGenre() {
                 }
             }
             console.log(selectedGenre)
-            getMovies(API_URL + '&with_genres=' + encodeURI(selectedGenre.
+            getMovies("https://api.themoviedb.org/3/discover/tv?sort_by=popularity.desc&api_key=0a2c754df24f03f4197199045aedf7de" + '&with_genres=' + encodeURI(selectedGenre.
                 join(',')))
             highlightSelections();
 
@@ -136,20 +136,7 @@ function setGenre() {
     })
 }
 
-function highlightSelections() {
-    const tags = document.querySelectorAll(".tag");
-    tags.forEach(tag => {
-        tag.classList.remove('highlight');
-    })
-    ClearBtn()
-    if (selectedGenre.length != 0) {
 
-        selectedGenre.forEach(id => {
-            const highlightTag = document.getElementById(id);
-            highlightTag.classList.add('highlight');
-        })
-    }
-}
 function ClearBtn() {
     let ClearBtn = document.getElementById("clear");
     if (ClearBtn) {
@@ -169,6 +156,20 @@ function ClearBtn() {
     }
 }
 
+function highlightSelections() {
+    const tags = document.querySelectorAll(".tag");
+    tags.forEach(tag => {
+        tag.classList.remove('highlight');
+    })
+    ClearBtn()
+    if (selectedGenre.length != 0) {
+
+        selectedGenre.forEach(id => {
+            const highlightTag = document.getElementById(id);
+            highlightTag.classList.add('highlight');
+        })
+    }
+}
 getMovies(API_URL);
 
 

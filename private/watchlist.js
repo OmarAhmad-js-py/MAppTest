@@ -54,8 +54,8 @@ function getWatchlist(data) {
       .then((res) => res.json())
       .then((Tvshowdata) => {
         watchlistdata.push(Tvshowdata)
-        console.log(watchlistdata)
-        showWatchlist(watchlistdata, Tvshowdata)
+
+        showWatchlist(watchlistdata, watchUID)
       })
 
   })
@@ -63,20 +63,29 @@ function getWatchlist(data) {
 
 }
 
-function showWatchlist(watchlistdata) {
+function showWatchlist(watchlistdata, watchUID) {
   mainEl.innerHTML = " ";
+  const delTMD = []
+
 
 
   watchlistdata.forEach((movie) => {
+    const watchlist = []
+
     const { name, first_air_date, vote_average, overview, poster_path, id } = movie;
+    delTMD.push(movie)
 
     const movieEl = document.createElement("div");
     movieEl.classList.add("movie", "col-lg-4", "col-m6", "col-s12");
     movieEl.innerHTML = `
       <div class="card-content">
+      <span style="color: Mediumslateblue;">
+      <i id="${delTMD}" class="Delete-btn fas fa-minus-circle"  data-fa-transform="grow-6"></i>
+      </span>
           <img 
           style="height: auto; width: 100%;"  src="${poster_path ? IMG_size + poster_path : "https://via.placeholder.com/500x750"}"
           />
+          
           </div>
        
       </div>
@@ -111,15 +120,40 @@ function showWatchlist(watchlistdata) {
       movieid.push(id);
       console.log("You have watch" + id);
       window.localStorage.setItem("id", JSON.stringify(id));
-      location.href = "/singletvshow";
+      //location.href = "/singletvshow";
+
+    })
+    document.getElementById(delTMD).addEventListener("click", () => {
+      const ids = []
+      ids.push(JSON.parse(movie.id))
+      console.log(JSON.stringify(ids))
+      const StoredWatchlist = JSON.parse(localStorage.getItem("Watchlist"))
+      const changed = StoredWatchlist.splice(ids, 1)
+      console.log(JSON.stringify(changed))
+
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify(ids)
+      }
+
+
+      fetch("/delRW", options).then(res => {
+        console.log(res.message);
+
+      })
+
+
 
     })
 
+
+
+
+
+
   })
-
-
-
-
-
-
 }
+

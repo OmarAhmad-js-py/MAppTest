@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { promisify } = require('util');
+const nodemailer = require("nodemailer");
 
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
@@ -31,6 +32,31 @@ exports.register = (req, res) => {
                 message: 'Passwords do not match'
             })
         }
+
+
+        let transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+                user: "omar.dreke654@gmail.com",
+                pass: "chwtucoywnsjqrlx",
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+
+        const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "20m" });
+
+        let info = await transporter.sendMail({
+            from: '<omar.dreke654@gmail.com>',
+            to: `${email}`,
+            subject: "Hello ✔",
+            text: "Hello world?",
+            html: "<b>Hello world?</b>",
+        });
+
 
         let hashedPassword = await bcrypt.hash(password, 8);
         console.log(hashedPassword);
