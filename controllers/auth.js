@@ -36,11 +36,11 @@ exports.register = (req, res) => {
 
         let transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
-            port: 587,
+            port:  process.env.SMPT_PORT,
             secure: false,
             auth: {
-                user: "omar.dreke654@gmail.com",
-                pass: "chwtucoywnsjqrlx",
+                user:  process.env.SMPT_USER,
+                pass: " process.env.SMPT_PASS,
             },
             tls: {
                 rejectUnauthorized: false
