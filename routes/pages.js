@@ -3,11 +3,9 @@ const authController = require('../controllers/auth')
 const mysql = require('mysql');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
-const { json } = require('body-parser');
-const { response } = require('express');
-var diff = require("fast-array-diff");
-var removeValue = require('remove-value');
+const {promisify} = require('util');
+let diff = require("fast-array-diff");
+let removeValue = require('remove-value');
 
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
@@ -34,8 +32,11 @@ router.get("/login", (req, res) => {
 router.get("/profile", authController.isLoggedIn, (req, res) => {
 
     if (req.user) {
+        let user = req.user
+        const date = new Date(user.joined)
+        user.joined = date.toDateString()
         res.render("profile", {
-            user: req.user,
+            user: user,
 
         });
     } else {
@@ -52,10 +53,12 @@ router.post("/Recommended", authController.isLoggedIn, async (req, res) => {
     RecommendedlistID.push(JSON.stringify(req.body))
 
 
-    db.query("UPDATE users SET Recommended = ? WHERE id = ? ", [RecommendedlistID, decoded.id], (err, result) => {
+    db.query("UPDATE users SET Recommended = ? WHERE id = ? ", [RecommendedlistID, decoded.id], (err, rows) => {
+
         if (err) {
             res.redirect(authController.logout, "/Login");
         } else {
+            console.log(rows)
             res.status(500).send(err);
             console.log(err);
         }
@@ -72,7 +75,7 @@ router.post("/delRW", authController.isLoggedIn, async (req, res) => {
         const delTMD = JSON.parse(`["${req.body}"]`)
 
 
-        db.query("SELECT Watchlist FROM users WHERE id = ? ", [decoded.id], async (err, result) => {
+        db.query("SELECT Watchlist FROM users WHERE id = ? ", [decoded.id], async (err) => {
             if (err) {
                 console.log(err)
             } else {
@@ -98,6 +101,18 @@ router.post("/delRW", authController.isLoggedIn, async (req, res) => {
     } else {
         res.redirect("/login");
     }
+})
+router.post("/delRW", authController.isLoggedIn, async (req, res) => {
+    const finddiff = `["${req.body}"]`
+    const watchlistdb = `${req.user.Watchlist}`
+    console.log(finddiff)
+    console.log(watchlistdb)
+    const diffound = diff.same(watchlistdb, finddiff)
+    console.log(diffound)
+    const deletediff = removeValue(watchlistdb, diffound)
+    console.log(deletediff)
+
+
 })
 
 router.post("/send", authController.isLoggedIn, async (req, res) => {
@@ -141,15 +156,15 @@ router.post("/send", authController.isLoggedIn, async (req, res) => {
 });
 
 router.get("/movies", authController.isLoggedIn, (req, res) => {
-    if (req.user) {
-        res.render("movies", {
-            user: req.user
+        if (req.user) {
+            res.render("movies", {
+                user: req.user
 
-        })
-    } else {
-        res.redirect("/login");
+            })
+        } else {
+            res.redirect("/login");
+        }
     }
-}
 )
 
 router.get("/tvshow", authController.isLoggedIn, (req, res) => {
@@ -174,8 +189,6 @@ router.get("/singletvshow", authController.isLoggedIn, (req, res) => {
         res.redirect("/login");
     }
 })
-
-
 
 
 router.post("/watchlistAPI", authController.isLoggedIn, async (req, res) => {
@@ -231,6 +244,27 @@ router.get("/page", authController.isLoggedIn, (req, res) => {
 
 })
 
+router.get("/email/auth/:token", authController.isLoggedIn, async (req, res) => {
+    const decoded_email = await promisify(jwt.verify)(req.params.token, process.env.JWT_SECRET);
+    console.log(decoded_email.email)
+    const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+    if (decoded_email.email === req.user.email) {
+        console.log("verifed")
+        db.query("UPDATE users SET Verfied = ? WHERE id = ?", ["verifed", decoded.id], (err, rows) => {
+            console.log("verifed")
+            if (!err) {
+                console.log(rows)
+            } else {
+                console.log(err)
+            }
+        })
+        res.redirect("/profile")
+    } else {
+        res.redirect("/login")
+    }
+
+
+})
 
 
 module.exports = router;

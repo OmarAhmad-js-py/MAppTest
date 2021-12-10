@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { promisify } = require('util');
+const {promisify} = require('util');
 const nodemailer = require("nodemailer");
 
 const db = mysql.createConnection({
@@ -16,7 +16,7 @@ exports.register = (req, res) => {
     console.log(req.body)
 
 
-    const { name, email, password, passwordConfirm } = req.body;
+    const {name, email, password, passwordConfirm} = req.body;
 
     db.query('SELECT email FROM users WHERE email = ?', [email], async (error, results) => {
         if (error) {
@@ -36,25 +36,25 @@ exports.register = (req, res) => {
 
         let transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
-            port:  process.env.SMPT_PORT,
+            port: 587,
             secure: false,
             auth: {
-                user:  process.env.SMPT_USER,
-                pass: " process.env.SMPT_PASS,
+                user: process.env.SMPT_USER,
+                pass: process.env.SMPT_PASS,
             },
             tls: {
                 rejectUnauthorized: false
             }
         });
 
-        const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "20m" });
+        const token = jwt.sign({email}, process.env.JWT_SECRET, {expiresIn: "20m"});
 
         let info = await transporter.sendMail({
             from: '<omar.dreke654@gmail.com>',
             to: `${email}`,
             subject: "Hello ✔",
             text: "Hello world?",
-            html: "<b>Hello world?</b>",
+            html: `${process.env.CLIENT}/email/auth/${token}`,
         });
 
 
@@ -62,9 +62,13 @@ exports.register = (req, res) => {
         console.log(hashedPassword);
 
         let currentdate = new Date()
-        let newdate = `${currentdate.getDate()}-${currentdate.getMonth()}-${currentdate.getFullYear()}`;
 
-        db.query("INSERT INTO users SET ?", { name: name, email: email, password: hashedPassword, Joined: newdate }, (error, results) => {
+        db.query("INSERT INTO users SET ?", {
+            name: name,
+            email: email,
+            password: hashedPassword,
+            Joined: currentdate
+        }, (error, results) => {
             if (error) {
                 console.log(error);
             } else {
@@ -83,7 +87,7 @@ exports.register = (req, res) => {
 exports.login = async (req, res) => {
 
     try {
-        const { email, password } = req.body
+        const {email, password} = req.body
 
         if (!email || !password) {
             return res.status(400).render('login', {
@@ -92,17 +96,15 @@ exports.login = async (req, res) => {
         }
 
         db.query('SELECT *  FROM users WHERE email = ?', [email], async (error, result) => {
-            console.log(result);
+
             if (!result || !(await bcrypt.compare(password, result[0].password))) {
-                res.status(401).render('login', { message: "The email or password is incorrect" })
+                res.status(401).render('login', {message: "The email or password is incorrect"})
             } else {
                 const id = result[0].id;
 
-                const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+                const token = jwt.sign({id}, process.env.JWT_SECRET, {
                     expiresIn: process.env.JWT_EXPIRATION
                 })
-
-                console.log("The token is:" + token)
 
 
                 const cookieOptions = {
@@ -132,7 +134,7 @@ exports.isLoggedIn = async (req, res, next) => {
             //2) cheack if the user still exist
 
             db.query('SELECT *  FROM users WHERE id = ?', [decoded.id], (error, result) => {
-                console.log(result || error)
+
 
                 if (!result) {
                     return next();
@@ -149,7 +151,6 @@ exports.isLoggedIn = async (req, res, next) => {
     } else {
         next();
     }
-
 
 
 }

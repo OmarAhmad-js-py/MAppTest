@@ -2,34 +2,28 @@ const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_URL = BASE_URL + "/tv/";
 const IMG_size = "https://image.tmdb.org/t/p/w500";
-const searchURL = BASE_URL + "/search/tv?" + API_KEY;
 
 const row = document.getElementById("row");
 const bio = document.getElementById("Bio");
 
 
-var Loadtext = function (event) {
+let Loadtext = function () {
     bio.innerHTML = ` 
     <form>
     <div class="form-group">
-    <label for="exampleFormControlTextarea1" align="center">Example textarea</label>
+    <label for="exampleFormControlTextarea1" >Example textarea</label>
     <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
     </div>
-    </form>
-
-
-    `
-
-
+    </form>`
 };
 
 
 getrecommendedData();
+
 function getrecommendedData() {
     const uri = "/Wathclater";
     let h = new Headers();
     h.append("Accept", "application/json");
-
     let req = new Request(uri, {
         method: "GET",
         headers: h,
@@ -61,12 +55,11 @@ function getRecommended(data) {
     });
 }
 
-function showRecomlist(Recomlistdata, Tvshowdata) {
-    row.innerHTML =
-        ' ';
+function showRecomlist(Recomlistdata) {
+    row.innerHTML = ' ';
 
     Recomlistdata.forEach(movie => {
-        const { name, poster_path, id } = movie;
+        const {poster_path, id} = movie;
 
         const movieEl = document.createElement("div");
         movieEl.classList.add("row");
@@ -75,16 +68,16 @@ function showRecomlist(Recomlistdata, Tvshowdata) {
         <div class="image">
           <img id="${id}" style="width: 120px;"
             src="${poster_path
-                ? IMG_size + poster_path
-                : "https://via.placeholder.com/500x750"
-            }" alt="Card image cap" />
+            ? IMG_size + poster_path
+            : "https://via.placeholder.com/500x750"
+        }" alt="Card image cap" />
                     
         </div> 
         
         `;
         row.appendChild(movieEl);
         document.getElementById(id).addEventListener("click", () => {
-            var movieid = [];
+            let movieid = [];
             movieid.push(id);
             window.localStorage.setItem("id", JSON.stringify(id));
             location.href = "/singletvshow";

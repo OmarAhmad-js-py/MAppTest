@@ -1,11 +1,8 @@
-
 const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_URL = BASE_URL + "/trending/tv/week?" + API_KEY;
 const IMG_size = "https://image.tmdb.org/t/p/w500";
 const searchURL = BASE_URL + '/search/tv?' + API_KEY;
-
-
 
 
 const genres = [
@@ -80,30 +77,20 @@ const mainEl = document.getElementById("main");
 const form = document.getElementById("form");
 const search = document.getElementById("search");
 const tagsEl = document.getElementById("tags");
-const Selider = document.getElementById("Season");
-const Epslider = document.getElementById("Episodes");
-
 const prev = document.getElementById("prev")
 const next = document.getElementById("next")
 const current = document.getElementById("current")
 
-const video1 = document.getElementById("video1")
+let currentPage = 1;
+let NextPage = 2;
+let prevPage = 3;
+let lastUrl = '';
+let totalpages = 100;
 
 
-
-
-
-var currentPage = 1;
-var NextPage = 2;
-var prevPage = 3;
-var lastUrl = '';
-var totalpages = 100;
-
-
-
-
-var selectedGenre = []
+let selectedGenre = [];
 setGenre();
+
 function setGenre() {
     tagsEl.innerHTML = "";
 
@@ -113,12 +100,12 @@ function setGenre() {
         t.id = genre.id;
         t.innerText = genre.name;
         t.addEventListener('click', () => {
-            if (selectedGenre.length == 0) {
+            if (selectedGenre.length === 0) {
                 selectedGenre.push(genre.id);
             } else {
                 if (selectedGenre.includes(genre.id)) {
                     selectedGenre.forEach((id, idx) => {
-                        if (id == genre.id) {
+                        if (id === genre.id) {
                             selectedGenre.splice(idx, 1);
                         }
                     })
@@ -127,8 +114,7 @@ function setGenre() {
                 }
             }
             console.log(selectedGenre)
-            getMovies("https://api.themoviedb.org/3/discover/tv?sort_by=popularity.desc&api_key=0a2c754df24f03f4197199045aedf7de" + '&with_genres=' + encodeURI(selectedGenre.
-                join(',')))
+            getMovies("https://api.themoviedb.org/3/discover/tv?sort_by=popularity.desc&api_key=0a2c754df24f03f4197199045aedf7de" + '&with_genres=' + encodeURI(selectedGenre.join(',')))
             highlightSelections();
 
         })
@@ -162,7 +148,7 @@ function highlightSelections() {
         tag.classList.remove('highlight');
     })
     ClearBtn()
-    if (selectedGenre.length != 0) {
+    if (selectedGenre.length !== 0) {
 
         selectedGenre.forEach(id => {
             const highlightTag = document.getElementById(id);
@@ -170,9 +156,8 @@ function highlightSelections() {
         })
     }
 }
+
 getMovies(API_URL);
-
-
 
 
 function getMovies(url) {
@@ -200,7 +185,7 @@ function getMovies(url) {
                     next.classList.remove("disabled")
 
                 }
-                form.scrollIntoView({ behavior: 'smooth' })
+                form.scrollIntoView({behavior: 'smooth'})
             }
         });
 }
@@ -209,10 +194,8 @@ function showMovies(data) {
     main.innerHTML = " ";
 
 
-
-
     data.forEach((movie) => {
-        const { name, first_air_date, vote_average, overview, poster_path, id } = movie;
+        const {name, first_air_date, vote_average, overview, poster_path, id} = movie;
 
         const movieEl = document.createElement("div");
         movieEl.classList.add("movie", "col-lg-4", "col-m6", "col-s12");
@@ -220,7 +203,7 @@ function showMovies(data) {
       <div class="card-content">
           <img 
           style="height: auto; width: 100%;"  src="${poster_path ? IMG_size + poster_path : "https://via.placeholder.com/500x750"}"
-          />
+           alt="Poster"/>
           </div>
        
       </div>
@@ -251,28 +234,22 @@ function showMovies(data) {
         mainEl.appendChild(movieEl);
         document.getElementById(id).addEventListener("click", () => {
 
-            var movieid = [];
-            movieid.push(id);
+            let movie_id = [];
+            movie_id.push(id);
             console.log("You have watch" + id);
             window.localStorage.setItem("id", JSON.stringify(id));
             location.href = "/singletvshow";
-
         })
-
-
-
-
     });
 }
-
 
 /* Close when someone clicks on the "x" symbol inside the overlay */
 function closeNav() {
     document.getElementById("myNav").style.width = "0%";
 }
 
-var activeSlide = 0;
-var totalVideos = 0;
+let activeSlide = 0;
+let totalVideos = 0;
 
 function showVideos() {
     let embedClasses = document.querySelectorAll('.embed');
@@ -280,7 +257,7 @@ function showVideos() {
 
     totalVideos = embedClasses.length;
     embedClasses.forEach((embedTag, idx) => {
-        if (activeSlide == idx) {
+        if (activeSlide === idx) {
             embedTag.classList.add('show')
             embedTag.classList.remove('hide')
 
@@ -294,8 +271,6 @@ function showVideos() {
 }
 
 
-
-
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     const searchTerm = search.value;
@@ -306,7 +281,6 @@ form.addEventListener("submit", (e) => {
     }
 
 })
-
 
 
 next.addEventListener("click", () => {
@@ -323,18 +297,17 @@ prev.addEventListener("click", () => {
 
 
 function pageCall(page) {
-    let urlsplit = lastUrl.split('?');
-    let queryParams = urlsplit[1].split('&');
+    let url_split = lastUrl.split('?');
+    let queryParams = url_split[1].split('&');
     let key = queryParams[queryParams.length - 1].split('=');
-    if (key[0] != "page") {
+    if (key[0] !== "page") {
         let url = lastUrl + "&page=" + page
         getMovies(url)
     } else {
         key[1] = page.toString();
-        let a = key.join('=');
-        queryParams[queryParams.length - 1] = a;
+        queryParams[queryParams.length - 1] = key.join('=');
         let b = queryParams.join('&');
-        let url = urlsplit[0] + '?' + b
+        let url = url_split[0] + '?' + b
         getMovies(url);
     }
 

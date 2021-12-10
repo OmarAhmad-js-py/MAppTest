@@ -23,10 +23,10 @@ app.use(express.static(publicDirectory));
 app.use(express.static(privateDirectory));
 app.use(express.static('upload'))
 app.use(fileUpload())
-// Parse URL_encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded({ extended: true }));
-// require json.decode
-app.use(express.json({ limit: "1mb" }))
+
+app.use(express.urlencoded({extended: true}));
+
+app.use(express.json({limit: "1mb"}))
 app.use(cookieParser());
 app.set("view engine", "hbs");
 
@@ -41,7 +41,6 @@ db.connect((error) => {
 //Define Routes
 app.use("/", require("./routes/pages"));
 app.use('/auth', require("./routes/auth"))
-
-app.listen(5001, () => {
-    console.log("Server started on port 5001")
+app.listen(8080, () => {
+    console.log("Server started on 8080")
 })

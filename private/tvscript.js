@@ -6,7 +6,6 @@ const IMG_URL = "https://image.tmdb.org/t/p/w300";
 const searchURL = BASE_URL + '/search/tv?' + API_KEY;
 
 
-
 const genre = [
     {
         "id": 10759,
@@ -76,98 +75,96 @@ const genre = [
 
 const watchlist = document.getElementById("watchlist");
 const recommend = document.getElementById("recommend")
-const mainEl = document.getElementById("main");
-const iframe = document.getElementById("tvshow");
 const form = document.getElementById("form");
-const search = document.getElementById("search");
-const tagsEl = document.getElementById("tags")
-const Selider = document.getElementById("Season");
-const Epslider = document.getElementById("Episodes");
-const CheackBtn = document.getElementById("get-url-btn");
 const main = document.getElementById("main_desc");
-const tvshow = document.getElementById("tvshow")
-const card_text = document.getElementById("card-text")
+const tvshow = document.getElementById("tv-show")
 const suggestion = document.getElementById("suggestions")
+const seasons_button = document.getElementById("seasons-wrapper")
+const episodes_button = document.getElementById("episodes-wrapper")
+let selected_season = 0
+let NextPage = 0
+let selected_episode = 1
 
 
-
-
-
-
-function tvshow_getShow() {
+function getShow() {
     fetch(BASE_URL + '/tv/' + id + "?" + API_KEY).then((res) => res.json()).then((data) => {
         document.getElementById("currentPage").innerText = `${data.name}`;
-        console.log(data)
         tvshow.setAttribute("src", " https://www.2embed.ru/embed/tmdb/tv?id=" + id + "&s=1 &e=1")
 
     })
 }
 
-tvshow_getShow();
-getSeasons();
-function getSeasons() {
+getShow();
+getShowInformation();
 
-    let embedClasses = document.querySelectorAll('.embed');
-    fetch(BASE_URL + `/tv/${id}?` + API_KEY).then((res) => res.json()).then((data) => {
+function getShowInformation() {
+    document.querySelectorAll('.embed');
+    fetch(BASE_URL + '/tv/' + id + "?" + API_KEY).then((res) => res.json()).then((data) => {
         console.log(data)
-        var Episode = Array.apply(null, Array(data.number_of_episodes)).map(function (_, i) { return i + 1; });
-        var season = Array.apply(null, Array(data.number_of_seasons)).map(function (_, i) { return i + 1; });
+        const Identifier = data.seasons[0].name === "Specials";
+        for (let i in data.seasons) {
+            const _element = document.createElement("a")
+            _element.classList.add("season-button")
+            _element.innerText = `${data.seasons[i].name}, (${data.seasons[i].episode_count})`
+            _element.addEventListener("click", () => {
+                if (Identifier == true) {
+                    console.log(Identifier)
+                } else {
+                    return false
+                }
+                selected_season = i + 1;
+                console.log(selected_season)
+                console.log("wow")
+            })
+            seasons_button.appendChild(_element)
 
+        }
 
-        $('#get-url-btn').click(function () {
-            let Episode = $('#Episode').val();
-            let Season = $('#Season').val();
-            $('#tvshow').attr('src', " https://www.2embed.ru/embed/tmdb/tv?id=" + id + "&s=" + Season + "&e=" + Episode)
+        console.log(data.seasons[selected_season].episode_count)
 
-        });
-
-
-
-    })
+        changeSeason(data)
+    });
 }
 
+function changeSeason(data) {
 
-
-
-
+    episodes_button.innerHTML = ""
+    for (let x = 1; x <= data.seasons[selected_season].episode_count; x++) {
+        const _episode = document.createElement("a")
+        _episode.classList.add("episode-button")
+        _episode.innerText = `${x}`
+        _episode.addEventListener("click", () => {
+            selected_episode = x
+            $('#tv-show').attr('src', " https://www.2embed.ru/embed/tmdb/tv?id=" + id + "&s=" + selected_season + "&e=" + x)
+        })
+        episodes_button.appendChild(_episode)
+    }
+}
 
 function showMovies() {
 
     fetch(BASE_URL + '/tv/' + id + "?" + API_KEY).then((res) => res.json()).then((data) => {
-        main.innerHTML = " ";
+            main.innerHTML = " ";
+            //console.log(data);
+            const number_of_seasons = data.number_of_seasons;
 
-        console.log(data);
-        const number_of_seasons = data.number_of_seasons;
+            const seasonObj = data.last_episode_to_air;
+            const EpisodeObj = seasonObj.episode_number;
+            //console.log(data.last_episode_to_air)
 
-        const seasonObj = data.last_episode_to_air;
-        const EpisodeObj = seasonObj.episode_number;
-        console.log(data.last_episode_to_air)
+            const {poster_path, name, overview, first_air_date, vote_average} = data
 
-
-
-
-
-
-        const { poster_path, name, overview, first_air_date, vote_average } = data
-
-
-        const movieEl = document.createElement("div");
-        movieEl.classList.add("card");
-        movieEl.innerHTML = `
-         
+            const movieEl = document.createElement("div");
+            movieEl.classList.add("card");
+            movieEl.innerHTML = `
          <div class="card-body">
             <img class="card-img-top" style="width: 120px;"src="${poster_path ? IMG_URL + poster_path : "https://via.placeholder.com/500x750"}" alt="Card image cap">
             <span class="movie-meta">
                 <span class="movie-meta-item">S${number_of_seasons}</span> 
                 <span class="movie-meta-item"> EP${EpisodeObj}</span>
             </span>
-            
-        
             <h5 class="card-title">${name}</h5>
-
-          
             <p class="card-text">${overview}</p>
-         
          <span class="movie-meta">
            <span class="movie-meta-item">
             <i class="fas fa-clock"></i> ${first_air_date}</span>
@@ -175,24 +172,13 @@ function showMovies() {
             <i class="fas fa-star"></i> 
                 ${vote_average}</a>
            </span>
-        
             </div>
-         
-            
-        
-
     `;
-
-        main.appendChild(movieEl);
-
-
-
-
-
-    }
-
+            main.appendChild(movieEl);
+        }
     )
 }
+
 showMovies();
 
 
@@ -200,7 +186,7 @@ function tvshow_getRec() {
 
 
     fetch(BASE_URL + '/tv/' + id + "/recommendations?" + API_KEY).then((res) => res.json()).then((data) => {
-        console.log(data)
+
         const info = data.results[0];
         const info1 = data.results[1];
         const info2 = data.results[2];
@@ -237,31 +223,28 @@ function tvshow_getRec() {
         })
 
 
-
     })
 
 
-
 }
+
 tvshow_getRec();
 
-async function sendWatchList() {
-    const showid = id
+function sendWatchList() {
 
     if (localStorage.getItem("Watchlist") == null) {
         localStorage.setItem("Watchlist", "[]")
     }
 
 
-
     watchlist.addEventListener("click", function (e) {
         e.preventDefault();
-
 
 
         const StoredWatchlist = JSON.parse(localStorage.getItem("Watchlist"))
         if (!StoredWatchlist.includes(id)) {
             StoredWatchlist.push(id)
+
             localStorage.setItem("Watchlist", JSON.stringify(StoredWatchlist))
 
             console.log(JSON.stringify(localStorage.getItem("Watchlist")));
@@ -291,10 +274,10 @@ async function sendWatchList() {
 
 
 }
+
 sendWatchList();
 
 function sendRecommended() {
-    const showid = id
 
     if (localStorage.getItem("Recommended") == null) {
         localStorage.setItem("Recommended", "[]")
@@ -302,7 +285,6 @@ function sendRecommended() {
 
     recommend.addEventListener("click", function (e) {
         e.preventDefault();
-
 
 
         const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"))
@@ -314,9 +296,8 @@ function sendRecommended() {
             console.log(JSON.stringify(localStorage.getItem("Recommended")));
 
             console.log(localStorage.getItem("Recommended"))
-
         } else {
-            return false;
+            return false
         }
 
         const options = {
