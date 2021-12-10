@@ -8,8 +8,6 @@ const IMG_URL = "https://image.tmdb.org/t/p/w500";
 const searchURL = BASE_URL + '/search/movie?' + API_KEY;
 
 
-
-
 const genres = [
     {
         "id": 28,
@@ -102,9 +100,6 @@ const current = document.getElementById("current")
 const video1 = document.getElementById("video1")
 
 
-
-
-
 var currentPage = 1;
 var NextPage = 2;
 var prevPage = 3;
@@ -112,10 +107,9 @@ var lastUrl = '';
 var totalpages = 100;
 
 
-
-
 var selectedGenre = []
 setGenre();
+
 function setGenre() {
     tagsEl.innerHTML = '';
     genres.forEach(genre => {
@@ -138,10 +132,8 @@ function setGenre() {
                 }
             }
             console.log(selectedGenre)
-            console.log(encodeURI(selectedGenre.
-                join(',')))
-            getMovies(API_URL + '&with_genres=' + encodeURI(selectedGenre.
-                join(',')))
+            console.log(encodeURI(selectedGenre.join(',')))
+            getMovies(API_URL + '&with_genres=' + encodeURI(selectedGenre.join(',')))
             highlightSelections();
 
         })
@@ -163,6 +155,7 @@ function highlightSelections() {
         })
     }
 }
+
 function ClearBtn() {
     let ClearBtn = document.getElementById("clear");
     if (ClearBtn) {
@@ -183,8 +176,6 @@ function ClearBtn() {
 }
 
 getMovies(API_URL);
-
-
 
 
 function getMovies(url) {
@@ -212,7 +203,7 @@ function getMovies(url) {
                     next.classList.remove("disabled")
 
                 }
-                form.scrollIntoView({ behavior: 'smooth' })
+                form.scrollIntoView({behavior: 'smooth'})
             }
         });
 }
@@ -221,7 +212,7 @@ function showMovies(data) {
     main.innerHTML = " ";
 
     data.forEach((movie) => {
-        const { title, release_date, vote_average, overview, poster_path, id } = movie;
+        const {title, release_date, vote_average, overview, poster_path, id} = movie;
 
         const movieEl = document.createElement("div");
         movieEl.classList.add("movie", "col-lg-4", "col-m6", "col-s12");
@@ -264,7 +255,9 @@ function showMovies(data) {
         })
     });
 }
+
 const overlayContent = document.getElementById("overlay-content")
+
 function openNav(movie) {
     let id = movie.id;
     fetch(BASE_URL + '/movie/' + id + '/videos?' + API_KEY).then(res => res.json()).then(videoData => {
@@ -275,7 +268,7 @@ function openNav(movie) {
                 var embed = [];
                 var links = [];
                 videoData.results.forEach((video) => {
-                    let { name, key, site } = video
+                    let {name, key, site} = video
 
                     if (site == 'YouTube') {
 
@@ -338,8 +331,6 @@ function showVideos() {
 }
 
 
-
-
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     const searchTerm = search.value;
@@ -350,7 +341,6 @@ form.addEventListener("submit", (e) => {
     }
 
 })
-
 
 
 next.addEventListener("click", () => {
