@@ -99,22 +99,19 @@ const prev = document.getElementById("prev")
 const next = document.getElementById("next")
 const current = document.getElementById("current")
 
-const video1 = document.getElementById("video1")
 
 
 
 
 
-var currentPage = 1;
-var NextPage = 2;
-var prevPage = 3;
-var lastUrl = '';
-var totalpages = 100;
+let currentPage = 1;
+let NextPage = 2;
+let prevPage = 3;
+let lastUrl = '';
+let totalpages = 100;
 
 
-
-
-var selectedGenre = []
+let selectedGenre = [];
 setGenre();
 function setGenre() {
     tagsEl.innerHTML = '';
@@ -124,12 +121,12 @@ function setGenre() {
         t.id = genre.id;
         t.innerText = genre.name;
         t.addEventListener('click', () => {
-            if (selectedGenre.length == 0) {
+            if (selectedGenre.length === 0) {
                 selectedGenre.push(genre.id);
             } else {
                 if (selectedGenre.includes(genre.id)) {
                     selectedGenre.forEach((id, idx) => {
-                        if (id == genre.id) {
+                        if (id === genre.id) {
                             selectedGenre.splice(idx, 1);
                         }
                     })
@@ -155,7 +152,7 @@ function highlightSelections() {
         tag.classList.remove('highlight');
     })
     ClearBtn()
-    if (selectedGenre.length != 0) {
+    if (selectedGenre.length !== 0) {
 
         selectedGenre.forEach(id => {
             const highlightTag = document.getElementById(id);
@@ -225,6 +222,7 @@ function showMovies(data) {
 
         const movieEl = document.createElement("div");
         movieEl.classList.add("movie", "col-lg-4", "col-m6", "col-s12");
+        movieEl.id = id;
         movieEl.innerHTML = `
       <div class="card-content">
           <img
@@ -249,106 +247,26 @@ function showMovies(data) {
         <p>
         ${overview.substring(0, 200)}
         </p>
-      </div>
-      
-      
-
+      </div>    
     `;
 
         mainEl.appendChild(movieEl);
         document.getElementById(id).addEventListener("click", () => {
             console.log(id);
-            var movieid = [];
-            openNav(movie);
+            const movieid = [];
+            window.location.href = "/singlemovie?id=" + id;
         })
     });
 }
-const overlayContent = document.getElementById("overlay-content")
-function openNav(movie) {
-    let id = movie.id;
-    fetch(BASE_URL + '/movie/' + id + '/videos?' + API_KEY).then(res => res.json()).then(videoData => {
-        console.log(videoData);
-        if (videoData) {
-            document.getElementById("myNav").style.width = "100%";
-            if (videoData.results.length > 0) {
-                var embed = [];
-                var links = [];
-                videoData.results.forEach((video) => {
-                    let { name, key, site } = video
-
-                    if (site == 'YouTube') {
-
-                        embed.push(`
-              <iframe width= "1099px" height= "618px" src="https://www.2embed.ru/embed/tmdb/movie?id=${id}" class="embed hide " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          
-          `)
-
-
-                    }
-                })
-
-                var content = `
-        <h1 class="no-results">${movie.original_title}</h1>
-        
-        <br/>
-        
-        ${embed.join('')}
-        <br/>
-        <div class="links">${links.join('')}</div>
-
-        
-        
-        `
-                overlayContent.innerHTML = content;
-                activeSlide = 0;
-                showVideos();
-            } else {
-                overlayContent.innerHTML = `<h1 class="no-results">No Results Found</h1>`
-            }
-        }
-    })
-}
-
-/* Close when someone clicks on the "x" symbol inside the overlay */
-function closeNav() {
-    document.getElementById("myNav").style.width = "0%";
-}
-
-var activeSlide = 0;
-var totalVideos = 0;
-
-function showVideos() {
-    let embedClasses = document.querySelectorAll('.embed');
-
-
-    totalVideos = embedClasses.length;
-    embedClasses.forEach((embedTag, idx) => {
-        if (activeSlide == idx) {
-            embedTag.classList.add('show')
-            embedTag.classList.remove('hide')
-
-        } else {
-            embedTag.classList.add('hide');
-            embedTag.classList.remove('show')
-        }
-    })
-
-
-}
 
 
 
-
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
+search.addEventListener("keyup", () => {
     const searchTerm = search.value;
-    selectedGenre = [];
-    highlightSelections()
     if (searchTerm) {
         getMovies(searchURL + '&query=' + searchTerm);
     }
-
-})
+});
 
 
 
@@ -369,7 +287,7 @@ function pageCall(page) {
     let urlsplit = lastUrl.split('?');
     let queryParams = urlsplit[1].split('&');
     let key = queryParams[queryParams.length - 1].split('=');
-    if (key[0] != "page") {
+    if (key[0] !== "page") {
         let url = lastUrl + "&page=" + page
         getMovies(url)
     } else {

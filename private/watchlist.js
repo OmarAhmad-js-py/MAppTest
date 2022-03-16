@@ -115,12 +115,10 @@ function showWatchlist(watchlistdata, watchUID) {
 
     mainEl.appendChild(movieEl);
     document.getElementById(id).addEventListener("click", () => {
-
-      var movieid = [];
+      const movieid = [];
       movieid.push(id);
       console.log("You have watch" + id);
       window.localStorage.setItem("id", JSON.stringify(id));
-      //location.href = "/singletvshow";
 
     })
     document.getElementById(delTMD).addEventListener("click", () => {

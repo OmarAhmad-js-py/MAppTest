@@ -82,11 +82,11 @@
       </li>
       </ul>
 
-      <header>
-        <form  id="form">
-            <input type="text" placeholder="Search" id="search" class="search">
-        </form>
-    </header>
+          <form id="form" class="form-horizontal">
+              <label for="search"></label><input type="text" placeholder="Search" id="search" class="search" data-toggle="drop" data-target="#list-suggestions" autocomplete="off" />
+              <ul id="list-suggestions" class="dropdown">
+              </ul>
+          </form>
 
     
       </div>

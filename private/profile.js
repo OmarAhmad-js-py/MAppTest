@@ -34,8 +34,6 @@ function getrecommendedData() {
 
 function getRecommended(data) {
     const RecomUID = JSON.parse(data)
-
-    console.log(data)
     const Recomlistdata = [];
 
     for (let i = 0; i < RecomUID.length; i++) {
@@ -66,18 +64,38 @@ function showRecomlist(Recomlistdata, Tvshowdata) {
             src="${poster_path
                 ? IMG_size + poster_path
                 : "https://via.placeholder.com/500x750"
-            }" alt="Card image cap" />
-                    
+            }" alt="${movie.name}" />    
         </div> 
         
         `;
         row.appendChild(movieEl);
         document.getElementById(id).addEventListener("click", () => {
-            var movieid = [];
+            const movieid = [];
             movieid.push(id);
             window.localStorage.setItem("id", JSON.stringify(id));
             location.href = "/singletvshow";
+        });
+        document.getElementById(id).addEventListener("auxclick", (event) => {
+            const ids = []
+            ids.push(JSON.parse(movie.id))
+            console.log(JSON.stringify(ids))
+            const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"))
+            const changed = StoredRecommended.splice(ids, 1)
+            console.log(JSON.stringify(changed))
 
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(ids)
+            }
+
+
+            fetch("/delRecommended", options).then(res => {
+                console.log(res.message);
+            })
+            window.location.reload();
         });
     });
 }

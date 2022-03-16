@@ -197,9 +197,7 @@ function showMovies(data) {
 
         const movieEl = document.createElement("div");
         movieEl.classList.add("movie", "col-md-4", "col-s10");
-
-
-        // language=HTML
+        movieEl.id = id;
         movieEl.innerHTML = `
       <div class="card-content">
           <img 
@@ -233,15 +231,7 @@ function showMovies(data) {
             movieid.push(id);
             console.log(id)
             console.log("You have watch" + id);
-            const options = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: `[${JSON.stringify(id)}]`,
-            };
-
-            fetch("/chosen", options)
+            window.location.href = "/singletvshow?id=" + id;
             window.localStorage.setItem("id", JSON.stringify(id))
 
         });

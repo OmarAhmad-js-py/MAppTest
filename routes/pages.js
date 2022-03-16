@@ -8,6 +8,7 @@ const { json } = require('body-parser');
 const { response } = require('express');
 const diff = require("fast-array-diff");
 const removeValue = require('remove-value');
+const {query} = require('express-validator');
 const axios = require('axios')
 
 const db = mysql.createConnection({
@@ -110,6 +111,40 @@ router.post("/delRW", authController.isLoggedIn, async (req, res) => {
     }
 })
 
+router.post("/delRecommended", authController.isLoggedIn, async (req, res) => {
+
+    if (req.user) {
+        const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+        const RecommendedlistID = JSON.parse(req.user.Recommended)
+        const delTMD = JSON.parse(`["${req.body}"]`)
+
+
+        db.query("SELECT Recommended FROM users WHERE id = ? ", [decoded.id], async (err, result) => {
+            if (err) {
+                console.log(err)
+            } else {
+                const teditem = diff.same(RecommendedlistID, delTMD)
+                const deleteditem = `'[${teditem}]'`.replace(/[\[\]']+/g, "")
+                console.log(deleteditem)
+
+                const ChangedelRecommended = removeValue(RecommendedlistID, deleteditem)
+                const newdelRecommended = []
+                newdelRecommended.push(JSON.stringify(ChangedelRecommended))
+                console.log(newdelRecommended)
+                db.query("UPDATE users SET Recommended = ? WHERE id = ? ", [newdelRecommended, decoded.id], (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(result)
+                        res.status(500)
+                    }
+                });
+
+            }
+        })
+    }
+})
+
 router.post("/send", authController.isLoggedIn, async (req, res) => {
 
     console.log("POST... ");
@@ -175,23 +210,29 @@ router.get("/tvshow", authController.isLoggedIn, (req, res) => {
 
 
 router.get("/singletvshow", authController.isLoggedIn, (req, res) => {
-
-
-
     if (req.user) {
         res.render("singletvshow", {
             user: req.user
-
         })
     } else {
         res.redirect("/login");
     }
 })
-router.post("/singletvshow", (req, res) => {
-    console.log(JSON.parse(req.body));
-    res.redirect("tvshow").send(req.body);
-})
 
+router.get("/singlemovie", [authController.isLoggedIn,
+    query("id").not().isEmpty().withMessage("id is required")
+    ],
+    (req, res) => {
+    console.log(req.query.id)
+    if (req.user) {
+        res.render("singlemovie.hbs", {
+            user: req.user
+        })
+
+    } else {
+        res.redirect("/login");
+    }
+})
 
 
 
@@ -265,7 +306,7 @@ router.get("/email/auth/:token", authController.isLoggedIn, async (req, res) => 
             res.redirect("/login");
         }
     } else {
-        return false;
+        res.redirect("/login");
     }
 
 })

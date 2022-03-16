@@ -1,5 +1,13 @@
 body {
   background: #fff;
+  color: #333;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  margin: 0;
+  padding: 0;
+  /*overflow: hidden;*/
+  width: auto;
 }
 
 .container {
@@ -121,6 +129,22 @@ nav {
     rgba(64, 26, 130, 1) 0%,
     rgba(201, 0, 135, 1) 100%
   );
+}
+
+.overlay{
+  display: none;
+}
+
+.overlay:hover .-label{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  color: #fafafa;
+  transition: background-color 0.2s ease-in-out;
+  border-radius: 100px;
+  margin-bottom: 0;
 }
 
 .alert-primary {
@@ -483,6 +507,15 @@ section.get-started .overlay {
   line-height: 100%;
 }
 
+.suggestion{
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
+  font-size: 13px;
+  line-height: 100%;
+
+}
+
 .movie-meta .movie-meta-item {
   display: flex;
   flex-wrap: wrap;
@@ -822,8 +855,9 @@ section.get-started .overlay {
   color: #fff;
 }
 .movie-buttons {
-  padding-left: 250px;
-  margin-bottom: -50px;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 .movie-buttons button {
@@ -837,6 +871,8 @@ header {
   display: flex;
   justify-content: flex-end;
   color: rgb(255, 255, 255);
+  background-color: #000;
+
 }
 
 .search {
@@ -905,7 +941,7 @@ header {
 }
 
 .card-text {
-  width: 590px;
+  width: auto;
 }
 .card-title {
   margin-bottom: 0.75rem;
@@ -1265,13 +1301,14 @@ form select,
 }
 
 .footer-in:hover {
-  color: #dd2a7b !important;
+  color: #0e76a8 !important;
   border: none !important;
 }
 
 footer.footer {
   padding-top: 4rem;
   padding-bottom: 4rem;
+
 }
 
 .footer a {
@@ -1288,7 +1325,6 @@ footer.footer {
   color: #fff;
   border-bottom: 2px solid transparent;
   border-image: linear-gradient(to right, #ebb431 0%, #c90087 100%);
-  border-image-slice: 1;
   text-decoration: none;
 }
 
@@ -1300,6 +1336,7 @@ footer.footer {
     rgba(201, 0, 135, 1) 100%
   );
   color: transparent;
+
 }
 
 .alert_email {

@@ -1,7 +1,7 @@
-const id = localStorage.getItem("id");
+const id = window.location.href.split('=')[1]
+console.log("hello")
 const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
-const API_URL = BASE_URL + "/discover/tv?sort_by=popularity.desc&" + API_KEY;
 const IMG_URL = "https://image.tmdb.org/t/p/w300";
 const IMG_URL_large = "https://image.tmdb.org/t/p/w1280";
 const searchURL = BASE_URL + "/search/tv?" + API_KEY;
@@ -63,7 +63,7 @@ let Changedseasons = 1;
 let Changedepisode = 1;
 
 
-function getseasons(data) {
+/*function getseasons(data) {
     for (let i = 0; i < data.number_of_seasons; i++) {
         const option = document.createElement("option");
         option.value = i + 1;
@@ -118,19 +118,19 @@ function makeSlider(id, season) {
     })
 }
 
-makeSlider(id);
+makeSlider(id);*/
 
 
 function tvshow_getShow() {
     console.log(id)
-    fetch(BASE_URL + "/tv/" + id + "?" + API_KEY)
+    fetch(BASE_URL + "/movie/" + id + "?" + API_KEY)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("currentPage").innerText = `${data.name}`;
-            getseasons(data);
-            makeSlider(id, Changedseasons)
+            document.getElementById("currentPage").innerText = `${data.title}`;
+            /*getseasons(data);
+            makeSlider(id, Changedseasons)*/
             console.log(data);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
+            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/movie?id=${id}`);
             backdrop.setAttribute("style", `background-image: url(${IMG_URL_large + data.backdrop_path})`);
         });
 }
@@ -139,24 +139,11 @@ tvshow_getShow();
 
 
 function showMovies() {
-    fetch(BASE_URL + "/tv/" + id + "?" + API_KEY)
+    fetch(BASE_URL + "/movie/" + id + "?" + API_KEY)
         .then(res => res.json())
         .then(data => {
             main.innerHTML = " ";
-
-            console.log(data);
-            const number_of_seasons = data.number_of_seasons;
-
-            const seasonObj = data.last_episode_to_air;
-            const EpisodeObj = seasonObj.episode_number;
-            console.log(data.last_episode_to_air);
-
-            for (let i = 0; i < data.genres.length; i++) {
-
-
-            }
-
-            const {poster_path, name, overview, first_air_date, vote_average, genres} = data;
+            const {poster_path, title, overview, release_date, vote_average, genres} = data;
 
             console.log(genres);
 
@@ -167,16 +154,13 @@ function showMovies() {
             <div class="col-md-2 col-sm-4 col-3">
                <img class="img-thumbnail" src="${poster_path ? IMG_URL + poster_path : "https://via.placeholder.com/500x750"}" alt="Card image cap">
                <span class="movie-meta">
-               <span class="movie-meta-item">S${number_of_seasons}</span> 
-               <span class="movie-meta-item"> EP${EpisodeObj}</span>
-              
            </span>
            </div>
            <div class="col-md-10 col-sm-8 col-9">
             
                
            
-               <h6 class="card-title">${name}</h6>
+               <h6 class="card-title">${title}</h6>
             
              
                <p class="card-text">${overview}</p>
@@ -184,7 +168,7 @@ function showMovies() {
                <span class="movie-meta">
                <span class="movie-meta-item">
                  <i class="fas fa-clock"></i>
-                 ${first_air_date}
+                 ${release_date}
                </span>
                <span>
                  <a href="#" class="movie-meta-item">
@@ -215,7 +199,7 @@ function showMovies() {
 showMovies();
 
 function tvshow_getRec() {
-    fetch(BASE_URL + "/tv/" + id + "/recommendations?" + API_KEY)
+    fetch(BASE_URL + "/movie/" + id + "/recommendations?" + API_KEY)
         .then(res => res.json())
         .then(data => {
             console.log(data);
@@ -226,7 +210,7 @@ function tvshow_getRec() {
                 movieEl.classList.add("col-md-3", "col-sm-6", "col-6");
                 movieEl.style = "margin-bottom: 20px";
                 movieEl.innerHTML = `
-                    <div class="image">
+                 <div class="image">
                  <img id="${id}" style="width: 200px;"
                    src="${poster_path ? IMG_URL + poster_path : "https://via.placeholder.com/500x750"}" alt="${name}" />
                  <div class="overlay" >
@@ -242,7 +226,7 @@ function tvshow_getRec() {
                     movieid.push(id);
                     console.log(id)
                     console.log("You have watch" + id);
-                    window.location.href = "/singletvshow?id=" + id;
+                    window.location.href = "/singlemovie?id=" + id;
                     window.localStorage.setItem("id", JSON.stringify(id))
                 });
             })

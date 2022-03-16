@@ -18,67 +18,60 @@
     integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
 
 
-<body>
-    <nav class="navbar navbar-expand-md">
-        <a class="navbar-brand" href="/"><img src="../logo.png" /></a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <i class="fas fa-home"></i>
-                        Home</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/movies">
-                        <i class="fas fa-film"></i>
-                        Movies</a>
-                </li>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-crown"></i>
-                        Genre</a>
-
-                    <div id="tags" class="dropdown-menu">
-                        <a class="tag" href="#">Adventure</a>
-                        <a class="tag" href="#">Horror</a>
-                        <a class="tag" href="#">Animation</a>
-                        <a class="tag" href="#">Comedy</a>
-                        <a class="tag" href="#">Fantasy</a>
-                    </div>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link"
-                        href="https://chrome.google.com/webstore/detail/pop-up-blocker-for-chrome/bkkbcggnhapdmkeljlodobbkopceiche">
-                        <i class="fas fa-download"></i>Download</a>
-                </li>
-            </ul>
-
-            <form id="form" class="form-horizontal">
-                <input type="text" placeholder="Search" id="search" class="search" data-toggle="drop"
-                    data-target="#list-suggestions" autocomplete="off" />
-                <ul id="list-suggestions" class="dropdown">
-
-                </ul>
-
-
-            </form>
-
-
-        </div>
-</body>
-
 </html>
-</nav>
+<body>
 <!-- breadcrumbs -->
+<nav class="navbar navbar-expand-md">
+    <a class="navbar-brand" href="/"><img src="../logo.png" /></a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home"></i>
+                    Home</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/movies">
+                    <i class="fas fa-film"></i>
+                    Movies</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-crown"></i>
+                    Genre</a>
+
+                <div id="tags" class="dropdown-menu">
+                    <a class="tag" href="#">Adventure</a>
+                    <a class="tag" href="#">Horror</a>
+                    <a class="tag" href="#">Animation</a>
+                    <a class="tag" href="#">Comedy</a>
+                    <a class="tag" href="#">Fantasy</a>
+                </div>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link"
+                   href="https://chrome.google.com/webstore/detail/pop-up-blocker-for-chrome/bkkbcggnhapdmkeljlodobbkopceiche">
+                    <i class="fas fa-download"></i>Download</a>
+            </li>
+        </ul>
+
+        <form id="form" class="form-horizontal">
+            <label for="search"></label><input type="text" placeholder="Search" id="search" class="search" data-toggle="drop" data-target="#list-suggestions" autocomplete="off" />
+            <ul id="list-suggestions" class="dropdown">
+            </ul>
+        </form>
+
+
+    </div>
+</nav>
 
 <div class="breadcrumb-nav-list" aria-label="breadcrumb">
     <ol class="breadcrumb-nav">
@@ -97,38 +90,30 @@
 
 
     <div id="myNav" class="overlay">
-        <ul class="tvseasons">
 
-            <li class="nav-item dropdown">
 
-                <div id="inputField" class="Episodes">
-                    <a aria-expanded="false">
-                        <i class="fas fa-film"></i>Season</a>
-                    <input type="number" id="Season" class="Season"></input>
-                    <a aria-expanded="false">
-                        <i class="fas fa-tv"></i>Episode</a>
-                    <input type="number" id="Episode" class="Episode">
-            </li>
-            </input>
+        <div id="inputField" class="Episodes">
+            <a aria-expanded="false">
+                <i class="fas fa-film"></i>Season</a>
+            <label for="Season"></label><input type="number" id="Season" class="Season"/>
+            <a aria-expanded="false">
+                <i class="fas fa-tv"></i>Episode</a>
+            <label for="Episode"></label><input type="number" id="Episode" class="Episode">
             <button type="button" id="get-url-btn">Check</button>
+        </div>
+
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"></a>
+        <div class="overlay-content" id="overlay-content"></div>
     </div>
-    </li>
-    </ul>
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"></a>
-    <div class="overlay-content" id="overlay-content"></div>
-</div>
-</div>
-</div>
-</body><!-- Use any element to open/show the overlay navigation menu --><span onclick="openNav()"></span>
-<!-- /movie cards --><br /><!-- /Pagination-->
+
+    <span onclick="openNav()"></span>
+<br />
 <div class="pagination">
     <div class="page" id="prev">Previous Page</div>
     <div class="current" id="current">1</div>
     <div class="page" id="next">Next Page</div>
-</div><!-- /Pagination-->
-<!-- Newsletter -->
-<!-- /Newsletter -->
-<!-- Footer -->
+</div>
+</div>
 <footer class="footer">
     <div class="container">
         <div class="row">
@@ -173,7 +158,7 @@
             </div>
         </div>
     </div>
-</footer><!-- /Footer -->
+</footer>
 <!-- Bootstrap core JavaScript
         ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -187,6 +172,6 @@
     integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
     crossorigin="anonymous"></script>
 <script src="tvshows.js"></script>
+
 </body>
 
-</html>
