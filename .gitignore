@@ -1,6 +1,6 @@
 .env
 node_modules
-/upload
 .idea
 .vscode
+upload/
 .temp/

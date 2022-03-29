@@ -1,215 +1,215 @@
 <!DOCTYPE html >
 <html lang="en">
-<head set="Access-Control-Allow-Origin: https://www.2embed.ru/embed/tmdb/movie?id= 550988">
-    <meta charset="utf-8"/>
+  <head set="Access-Control-Allow-Origin: https://www.2embed.ru/embed/tmdb/movie?id= 550988">
+    <meta charset="utf-8" />
     <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <link rel="icon" href="../favicon.png"/>
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="../favicon.png" />
 
     <title>Tickets</title>
-    <link rel="stylesheet" href="../css/main.css" type="text/css"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" />
     <link
-            href="https://fonts.googleapis.com/css?family=Roboto"
-            rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
     />
     <link
-            rel="stylesheet"
-            href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-            integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
-            crossorigin="anonymous"
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+      integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+      crossorigin="anonymous"
     />
 
     <!-- Bootstrap core CSS -->
     <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
-            integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
-            crossorigin="anonymous"
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+      integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+      crossorigin="anonymous"
     />
-</head>
+  </head>
 
-<body>
-<nav class="navbar navbar-expand-md">
-    <a class="navbar-brand" href="/"><img src="../logo.png"/></a>
-    <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-    >
+  <body>
+    <nav class="navbar navbar-expand-md">
+      <a class="navbar-brand" href="/"><img src="../logo.png" /></a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <i class="fas fa-bars"></i>
-    </button>
+      </button>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/"
-                ><i class="fas fa-home"></i> Home</a
-                >
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/tvshow"><i class="fas fa-film"></i> Tv show</a>
-            </li>
-            </li>
-            <li class="nav-item dropdown">
-                <a
-                        class="nav-link dropdown-toggle"
-                        data-toggle="dropdown"
-                        href="#"
-                        role="button"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                ><i class="fas fa-crown"></i> Genre</a
-                >
+          <li class="nav-item">
+            <a class="nav-link" href="/"
+              ><i class="fas fa-home"></i> Home</a
+            >
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/tvshow"><i class="fas fa-film"></i> Tv show</a>
+          </li>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            ><i class="fas fa-crown"></i> Genre</a
+          >
+          
+          <div id="tags"class="dropdown-menu">
+            <a class="tag" href="#">Adventure</a>
+            <a class="tag" href="#">Horror</a>
+            <a class="tag" href="#">Animation</a>
+            <a class="tag" href="#">Comedy</a>
+            <a class="tag" href="#">Fantasy</a>
+          </div>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="https://chrome.google.com/webstore/detail/pop-up-blocker-for-chrome/bkkbcggnhapdmkeljlodobbkopceiche"><i class="fas fa-download"></i>Download</a>
+      </li>
+      </ul>
 
-                <div id="tags" class="dropdown-menu">
-                    <a class="tag" href="#">Adventure</a>
-                    <a class="tag" href="#">Horror</a>
-                    <a class="tag" href="#">Animation</a>
-                    <a class="tag" href="#">Comedy</a>
-                    <a class="tag" href="#">Fantasy</a>
-                </div>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link"
-                   href="https://chrome.google.com/webstore/detail/pop-up-blocker-for-chrome/bkkbcggnhapdmkeljlodobbkopceiche"><i
-                        class="fas fa-download"></i>Download</a>
-            </li>
-        </ul>
+          <form id="form" class="form-horizontal">
+              <label for="search"></label><input type="text" placeholder="Search" id="search" class="search" data-toggle="drop" data-target="#list-suggestions" autocomplete="off" />
+              <ul id="list-suggestions" class="dropdown">
+              </ul>
+          </form>
 
-        <header>
-            <form id="form">
-                <input type="text" placeholder="Search" id="search" class="search">
-            </form>
-        </header>
-
-
-    </div>
-</nav>
-<!-- breadcrumbs -->
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Movies</li>
+    
+      </div>
+    </nav>
+    <!-- breadcrumbs -->
+  <div class="breadcrumb-nav-list" aria-label="breadcrumb">
+    <ol class="breadcrumb-nav">
+      <li class="breadcrumb-item"><a href="/index">Home</a></li>
+      <li class="breadcrumb-item"><a href="/movies">movies</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><span id="currentPage"></span></li>
     </ol>
-</nav>
-<!-- /breadcrumbs -->
-<!-- movie cards -->
-<div class="container">
-    <div class="alert alert-primary" role="alert">
+  </div>
+    <!-- /breadcrumbs -->
+    <!-- movie cards -->
+    <div class="container">
+      <div class="alert alert-primary" role="alert">
         <i class="fas fa-exclamation-circle"></i> Have fun! Dont be here for too long tho!
-    </div>
-    <main id="main" class="row">
+      </div>
+      <main id ="main" class="row">
+  
 
+          
+       </main>
+       <!-- The overlay -->
+<div id="myNav" class="overlay">
 
-    </main>
-    <!-- The overlay -->
-    <div id="myNav" class="overlay">
+  <!-- Button to close the overlay navigation -->
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-        <!-- Button to close the overlay navigation -->
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <!-- Overlay content -->
+  <div class="overlay-content" id="overlay-content">
+    <a href="javascript:void(0)" class="arrow left-arrow" id="left-arrow">&#8656;</a> 
+        
+        <a href="javascript:void(0)" class="arrow right-arrow" id="right-arrow" >&#8658;</a>
 
-        <!-- Overlay content -->
-        <div class="overlay-content" id="overlay-content">
-            <a href="javascript:void(0)" class="arrow left-arrow" id="left-arrow">&#8656;</a>
+  </div>
 
-            <a href="javascript:void(0)" class="arrow right-arrow" id="right-arrow">&#8658;</a>
-
-        </div>
-
-    </div>
+</div>
 </div>
 <!-- Use any element to open/show the overlay navigation menu -->
 <span onclick="openNav()"></span>
-<!-- /movie cards -->
-<br/>
+    <!-- /movie cards -->
+    <br />
+    
+     <!-- /Pagination-->
+     <div class="pagination">
+      <div class="page" id="prev">Previous Page</div>
+      <div class="current" id="current">1</div>
+      <div class="page" id="next">Next Page</div>
 
-<!-- /Pagination-->
-<div class="pagination">
-    <div class="page" id="prev">Previous Page</div>
-    <div class="current" id="current">1</div>
-    <div class="page" id="next">Next Page</div>
+  </div>
+     <!-- /Pagination-->
+    <!-- Newsletter -->
 
-</div>
-<!-- /Pagination-->
-<!-- Newsletter -->
-
-<!-- /Newsletter -->
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
+    <!-- /Newsletter -->
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
         <div class="row">
-            <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-                <ul class="list-inline mb-2">
-                    <li class="list-inline-item">
-                        <a href="page.html">About us</a>
-                    </li>
-                    <li class="list-inline-item">&sdot;</li>
-                    <li class="list-inline-item">
-                        <a href="page.html">Refunds</a>
-                    </li>
-                    <li class="list-inline-item">&sdot;</li>
-                    <li class="list-inline-item">
-                        <a href="page.html">Terms and Privacy</a>
-                    </li>
-                    <li class="list-inline-item">&sdot;</li>
-                    <li class="list-inline-item">
-                        <a href="contact.html">Contact</a>
-                    </li>
-                </ul>
-                <p class="small mb-4 mb-lg-0">
-                    Omar Ahmad&copy; 2022. All Rights Reserved.
-                </p>
-            </div>
-            <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-                <ul class="list-inline mb-0">
-                    <li class="list-inline-item mr-3">
-                        <a href="https://linkedin.com/in/byalk" class="footer-fb">
-                            <i class="fab fa-linkedin fa-2x fa-fw"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item mr-3">
-                        <a href="#" class="footer-tw">
-                            <i class="fab fa-twitter fa-2x fa-fw"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#" class="footer-in">
-                            <i class="fab fa-instagram fa-2x fa-fw"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+          <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+            <ul class="list-inline mb-2">
+              <li class="list-inline-item">
+                <a href="page.html">About us</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="page.html">Refunds</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="page.html">Terms and Privacy</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="contact.html">Contact</a>
+              </li>
+            </ul>
+            <p class="small mb-4 mb-lg-0">
+              Omar Ahmad&copy; 2022. All Rights Reserved.
+            </p>
+          </div>
+          <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item mr-3">
+                <a href="https://linkedin.com/in/byalk" class="footer-fb">
+                  <i class="fab fa-linkedin fa-2x fa-fw"></i>
+                </a>
+              </li>
+              <li class="list-inline-item mr-3">
+                <a href="#" class="footer-tw">
+                  <i class="fab fa-twitter fa-2x fa-fw"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="#" class="footer-in">
+                  <i class="fab fa-instagram fa-2x fa-fw"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-    </div>
-</footer>
-<!-- /Footer -->
+      </div>
+    </footer>
+    <!-- /Footer -->
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script
-        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"
-></script>
-<script
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
-        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-        crossorigin="anonymous"
-></script>
-<script
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-        crossorigin="anonymous"
-></script>
-<script src="script.js"></script>
-</body>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+      integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+      integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+      crossorigin="anonymous"
+    ></script>
+    <script src="script.js"></script>
+  </body>
 </html>

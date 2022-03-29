@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const {promisify} = require('util');
+const { promisify } = require('util');
 const nodemailer = require("nodemailer");
 
 const db = mysql.createConnection({
@@ -16,7 +16,7 @@ exports.register = (req, res) => {
     console.log(req.body)
 
 
-    const {name, email, password, passwordConfirm} = req.body;
+    const { name, email, password, passwordConfirm } = req.body;
 
     db.query('SELECT email FROM users WHERE email = ?', [email], async (error, results) => {
         if (error) {
@@ -32,29 +32,30 @@ exports.register = (req, res) => {
                 message: 'Passwords do not match'
             })
         }
-
+        const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "20m" });
 
         let transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
             secure: false,
             auth: {
-                user: process.env.SMPT_USER,
-                pass: process.env.SMPT_PASS,
+                user: "omar.dreke654@gmail.com",
+                pass: "ipbjicnxypylepoj",
             },
             tls: {
                 rejectUnauthorized: false
             }
         });
 
-        const token = jwt.sign({email}, process.env.JWT_SECRET, {expiresIn: "20m"});
+
+
 
         let info = await transporter.sendMail({
             from: '<omar.dreke654@gmail.com>',
             to: `${email}`,
-            subject: "Hello ✔",
-            text: "Hello world?",
-            html: `${process.env.CLIENT}/email/auth/${token}`,
+            subject: "Account Activation",
+            text: "Link for account activation",
+            html: `${process.env.CLIENT_URL}/email/auth/${token}`
         });
 
 
@@ -62,19 +63,15 @@ exports.register = (req, res) => {
         console.log(hashedPassword);
 
         let currentdate = new Date()
+        let newdate = `${currentdate.getDate()}-${currentdate.getMonth()}-${currentdate.getFullYear()}`;
 
-        db.query("INSERT INTO users SET ?", {
-            name: name,
-            email: email,
-            password: hashedPassword,
-            Joined: currentdate
-        }, (error, results) => {
+        db.query("INSERT INTO users SET ?", { name: name, email: email, password: hashedPassword, Joined: newdate, }, (error, results) => {
             if (error) {
                 console.log(error);
             } else {
                 console.log(results);
                 return res.render('register', {
-                    message: 'User Registration: Success'
+                    message: 'User Registration: Success, please login before checking your email for the verfication link '
                 })
 
             }
@@ -87,7 +84,7 @@ exports.register = (req, res) => {
 exports.login = async (req, res) => {
 
     try {
-        const {email, password} = req.body
+        const { email, password } = req.body
 
         if (!email || !password) {
             return res.status(400).render('login', {
@@ -96,15 +93,20 @@ exports.login = async (req, res) => {
         }
 
         db.query('SELECT *  FROM users WHERE email = ?', [email], async (error, result) => {
-
-            if (!result || !(await bcrypt.compare(password, result[0].password))) {
-                res.status(401).render('login', {message: "The email or password is incorrect"})
-            } else {
+            console.log(result);
+            if (!(await bcrypt.compare(password, result[0].password)) || !result) {
+                res.status(401).render('login', { message: "The email or password is incorrect" })
+            } else if (error) {
+                console.log("error");
+            }
+            else {
                 const id = result[0].id;
 
-                const token = jwt.sign({id}, process.env.JWT_SECRET, {
+                const token = jwt.sign({ id }, process.env.JWT_SECRET, {
                     expiresIn: process.env.JWT_EXPIRATION
                 })
+
+                console.log("The token is:" + token)
 
 
                 const cookieOptions = {
@@ -134,7 +136,7 @@ exports.isLoggedIn = async (req, res, next) => {
             //2) cheack if the user still exist
 
             db.query('SELECT *  FROM users WHERE id = ?', [decoded.id], (error, result) => {
-
+                console.log(result || error)
 
                 if (!result) {
                     return next();
@@ -153,6 +155,7 @@ exports.isLoggedIn = async (req, res, next) => {
     }
 
 
+
 }
 
 exports.logout = async (req, res) => {
@@ -163,3 +166,19 @@ exports.logout = async (req, res) => {
 
     res.status(200).redirect('/')
 }
+
+// exports.checkVerification = async (req, res, next) => {
+//     console.log(req.user.Verfication);
+//     if (!req.user.Verfication == "verfied") {
+//         try {
+//             return res.render('/', {
+//                 message: 'Please verify your email address'
+//             })
+//         } catch (error) {
+//             console.log(error);
+//             return next();
+//         }
+//     } else {
+//         next();
+//     }
+// }
