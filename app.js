@@ -14,7 +14,10 @@ const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE
+    database: process.env.DATABASE,
+    port: process.env.MYSQLPORT,
+    URL: process.env.MYSQL_URL
+
 });
 
 const publicDirectory = path.join(__dirname, './public')
@@ -42,7 +45,7 @@ db.connect((error) => {
 app.use("/", require("./routes/pages"));
 app.use('/auth', require("./routes/auth"))
 
-const port = 5002
+const port = 5002 || process.env.PORT;
 
 app.listen(port, () => {
     console.log("Server started on port " + port)
