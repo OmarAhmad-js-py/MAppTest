@@ -1,4 +1,4 @@
- const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
+const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_URL = BASE_URL + "/tv/";
 const IMG_size = "https://image.tmdb.org/t/p/w500";
@@ -6,8 +6,19 @@ const searchURL = BASE_URL + "/search/tv?" + API_KEY;
 
 const row = document.getElementById("row");
 const bio = document.getElementById("Bio");
+const profile = document.getElementById("output");
+const file = document.getElementById("file");
 
 
+//get data from server "/getblob" 
+function getData() {
+    fetch(`/getBlob`)
+        .then(res => res.text())
+        .then(data => {
+            profile.src = data;
+        })
+}
+getData();
 
 getrecommendedData();
 function getrecommendedData() {
@@ -24,7 +35,7 @@ function getrecommendedData() {
     fetch(req)
         .then(res => res.json())
         .then(data => {
-            console.log(data.Recommended)
+            console.log(data)
             getRecommended(data.Recommended);
         })
         .catch(err => {
@@ -41,14 +52,14 @@ function getRecommended(data) {
             .then(res => res.json())
             .then(Tvshowdata => {
                 Recomlistdata.push(Tvshowdata);
-                showRecomlist(Recomlistdata, Tvshowdata);
+                showRecomlist(Recomlistdata);
             })
     }
 
 
 }
 
-function showRecomlist(Recomlistdata, Tvshowdata) {
+function showRecomlist(Recomlistdata) {
     row.innerHTML =
         ' ';
 
@@ -126,8 +137,33 @@ function handlebarsHelper(res) {
 
 const profile_img = document.getElementById("profile-output");
 
-profile_img.addEventListener("click", () => {
-    location.href = "/profile"
 
-})
+//check if file is selected or not
+file.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+        const formData = new FormData();
+        //cheack if img file is png and is not bigger than 1024kb
+        if (file.type === "image/png" && file.size <= 102900) {
+
+            formData.append("file", file);
+            const options = {
+                method: "POST",
+                body: formData
+            }
+            fetch("/send", options).then(res => {
+                console.log(res.message);
+            }).catch(err => {
+                console.log(err);
+            })
+        } else {
+            //prompt "selected file is not png"
+            alert("selected file must be png and less then 1024kb")
+        }
+    }
+});
+
+
+
 

@@ -9,7 +9,7 @@ dotenv.config();
 console.log(process.env.API_KEY)
 const app = express();
 
-
+console.log(process.env.API_KEY)
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
@@ -42,7 +42,7 @@ db.connect((error) => {
 app.use("/", require("./routes/pages"));
 app.use('/auth', require("./routes/auth"))
 
-const port = 5001
+const port = 5002
 
 app.listen(port, () => {
     console.log("Server started on port " + port)
