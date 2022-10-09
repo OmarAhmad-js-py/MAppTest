@@ -1,6 +1,5 @@
 const express = require('express');
-const mysql = require('mysql')
-
+const mysql = require('mysql2');
 const path = require('path');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
@@ -18,7 +17,6 @@ const db = mysql.createConnection({
     database: process.env.DATABASE,
     port: process.env.MYSQLPORT,
     URL: process.env.MYSQL_URL
-
 });
 
 const publicDirectory = path.join(__dirname, './public')
