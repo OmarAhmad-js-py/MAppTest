@@ -95,19 +95,13 @@
 
     <ul class="tvseasons">
         <li class="">
-
-
-
-
         </li>
-
     </ul>
 
     <div class="player">
         <div class="embed-responsive embed-responsive-16by9">
-            <iframe id="tvshow" src="javascript:void(0)" class="embed"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+            <iframe id="tvshow" onload="frameLoad();" onreadystatechange="frameLoad();" src="javascript:void(0)" class="embed"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 

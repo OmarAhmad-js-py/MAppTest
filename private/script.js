@@ -261,6 +261,13 @@ function showMovies(data) {
 
 
 
+
+
+
+
+
+
+
 search.addEventListener("keyup", () => {
     const searchTerm = search.value;
     if (searchTerm) {

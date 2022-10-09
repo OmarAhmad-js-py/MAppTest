@@ -63,62 +63,6 @@ let Changedseasons = 1;
 let Changedepisode = 1;
 
 
-/*function getseasons(data) {
-    for (let i = 0; i < data.number_of_seasons; i++) {
-        const option = document.createElement("option");
-        option.value = i + 1;
-        option.id = i + 1;
-        option.innerText = i + 1;
-        option.addEventListener("click", function () {
-            Changedseasons = this.value;
-            console.log(Changedseasons);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
-            makeSlider(data.id, Changedseasons);
-
-
-        });
-        Selider.appendChild(option);
-    }
-
-}
-
-function makeSlider(id, season) {
-    const options = {
-        method: "GET", headers: {
-            "Accept": "application/json",
-        }
-    };
-
-
-    fetch(`${BASE_URL}/tv/${id}/season/${season}?${API_KEY}`, options)
-        .then(data => {
-            return data.json();
-        }).then(data => {
-        console.log(data);
-        while (Epslider.firstChild) {
-            Epslider.removeChild(Epslider.firstChild);
-        }
-        for (let i = 0; i < data.episodes.length; i++) {
-            const option = document.createElement("option");
-            option.setAttribute("id", `${i}`);
-            option.value = i + 1;
-            option.innerText = i + 1;
-            console.log(option.value);
-            option.addEventListener("click", function () {
-                Changedepisode = this.value;
-                tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
-                getseasons(Changedepisode);
-
-            });
-            Epslider.appendChild(option);
-        }
-
-    }).catch((err) => {
-        console.log("ERROR: " + err.message)
-    })
-}
-
-makeSlider(id);*/
 
 
 function tvshow_getShow() {
@@ -127,15 +71,58 @@ function tvshow_getShow() {
         .then(res => res.json())
         .then(data => {
             document.getElementById("currentPage").innerText = `${data.title}`;
-            /*getseasons(data);
-            makeSlider(id, Changedseasons)*/
             console.log(data);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/movie?id=${id}`);
+            tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/movie?id=${id}`);
             backdrop.setAttribute("style", `background-image: url(${IMG_URL_large + data.backdrop_path})`);
         });
 }
 
 tvshow_getShow();
+
+let prevent_bust = false;
+let from_loading_204 = false;
+let frame_loading = false;
+let prevent_bust_timer = 0;
+let primer = true;
+
+tvshow.addEventListener("load", () => {
+    prevent_bust = !from_loading_204 && frame_loading;
+    if (from_loading_204) from_loading_204 = false;
+    if (prevent_bust) {
+        console.log("prevented");
+        prevent_bust_timer = 500;
+    }
+})
+function frameLoad() {
+    console.log("frameLoad");
+    if (!primer) {
+        from_loading_204 = true;
+        window.top.location = '/?204';
+        prevent_bust = false;
+        frame_loading = true;
+        prevent_bust_timer = 1000;
+    } else {
+        primer = false;
+    }
+}
+setInterval(() => {
+    if (prevent_bust_timer > 0) {
+        if (prevent_bust) {
+            from_loading_204 = true;
+            window.top.location = '/?204';
+            prevent_bust = false;
+        } else if (prevent_bust_timer === 1) {
+            frame_loading = false;
+            prevent_bust = false;
+            from_loading_204 = false;
+            prevent_bust_timer === 0;
+        }
+    }
+    prevent_bust_timer--;
+    if (prevent_bust_timer === -100) {
+        prevent_bust_timer = 0;
+    }
+}, 1);
 
 
 function showMovies() {
@@ -143,7 +130,7 @@ function showMovies() {
         .then(res => res.json())
         .then(data => {
             main.innerHTML = " ";
-            const {poster_path, title, overview, release_date, vote_average, genres} = data;
+            const { poster_path, title, overview, release_date, vote_average, genres } = data;
 
             console.log(genres);
 
@@ -205,7 +192,7 @@ function tvshow_getRec() {
             console.log(data);
             data.results.map((item, index) => {
                 console.log(item);
-                const {poster_path, name, vote_average,id} = item;
+                const { poster_path, name, vote_average, id } = item;
                 const movieEl = document.createElement("div");
                 movieEl.classList.add("col-md-3", "col-sm-6", "col-6");
                 movieEl.style = "margin-bottom: 20px";
@@ -274,7 +261,7 @@ function sendRecommended() {
         localStorage.setItem("Recommended", "[]");
     }
 
-    recommend.addEventListener("click", function (e) {
+    recommend.addEventListener("click", (e) => {
         e.preventDefault();
 
         const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"));
@@ -302,4 +289,8 @@ function sendRecommended() {
     });
 }
 
+//run all functions here
+
+
 sendRecommended();
+

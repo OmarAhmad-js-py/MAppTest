@@ -48,8 +48,6 @@ exports.register = (req, res) => {
         });
 
 
-
-
         let info = await transporter.sendMail({
             from: '<omar.dreke654@gmail.com>',
             to: `${email}`,
@@ -65,7 +63,12 @@ exports.register = (req, res) => {
         let currentdate = new Date()
         let newdate = `${currentdate.getDate()}-${currentdate.getMonth()}-${currentdate.getFullYear()}`;
 
-        db.query("INSERT INTO users SET ?", { name: name, email: email, password: hashedPassword, Joined: newdate, }, (error, results) => {
+        db.query("INSERT INTO users SET ?", {
+            name: name,
+            email: email,
+            password: hashedPassword,
+            Joined: newdate,
+        }, (error, results) => {
             if (error) {
                 console.log(error);
             } else {
@@ -98,8 +101,7 @@ exports.login = async (req, res) => {
                 res.status(401).render('login', { message: "The email or password is incorrect" })
             } else if (error) {
                 console.log("error");
-            }
-            else {
+            } else {
                 const id = result[0].id;
 
                 const token = jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -125,19 +127,11 @@ exports.login = async (req, res) => {
 }
 
 exports.isLoggedIn = async (req, res, next) => {
-    console.log(req.cookies);
     if (req.cookies.jwt) {
         try {
-            //1) Verify the jwt 
-            const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
-
-            console.log(decoded.id)
-
-            //2) cheack if the user still exist
-
+            const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
             db.query('SELECT *  FROM users WHERE id = ?', [decoded.id], (error, result) => {
-                console.log(result || error)
-
+                
                 if (!result) {
                     return next();
                 }
@@ -155,7 +149,6 @@ exports.isLoggedIn = async (req, res, next) => {
     }
 
 
-
 }
 
 exports.logout = async (req, res) => {
@@ -167,18 +160,85 @@ exports.logout = async (req, res) => {
     res.status(200).redirect('/')
 }
 
-// exports.checkVerification = async (req, res, next) => {
-//     console.log(req.user.Verfication);
-//     if (!req.user.Verfication == "verfied") {
-//         try {
-//             return res.render('/', {
-//                 message: 'Please verify your email address'
-//             })
-//         } catch (error) {
-//             console.log(error);
-//             return next();
-//         }
-//     } else {
-//         next();
-//     }
-// }
+exports.checkVerification = async (req, res, next) => {
+    if (req.cookies.jwt) {
+        try {
+            const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
+
+            db.query('SELECT *  FROM users WHERE id = ?', [decoded.id], async (error, result) => {
+                if (result[0].Verfication === "verifed") {
+                    return next();
+                } else {
+                    const email = result[0].email
+                    res.status(401).render('movies', { message: "Please verify your email" })
+                    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "20m" });
+                    let transporter = nodemailer.createTransport({
+                        host: "smtp.gmail.com",
+                        port: 587,
+                        secure: false,
+                        auth: {
+                            user: "omar.dreke654@gmail.com",
+                            pass: "ipbjicnxypylepoj",
+                        },
+                        tls: {
+                            rejectUnauthorized: false
+                        }
+                    });
+
+
+                    let info = await transporter.sendMail({
+                        from: '<omar.dreke654@gmail.com>',
+                        to: `${email}`,
+                        subject: "Account Activation",
+                        text: "Link for account activation",
+                        html: `${process.env.CLIENT_URL}/email/auth/${token}`
+                    });
+
+                }
+            })
+        } catch (error) {
+            console.log(error);
+            return next();
+        }
+    } else {
+        return res.render('login', {
+            message: "Login to continue"
+        })
+    }
+
+}
+
+exports.passwordReset = async (req, res, next) => {
+    const { email } = req.body;
+    console.log(email);
+    db.query('SELECT *  FROM users WHERE email = ?', [email], (error, result) => {
+        if (!result) {
+            return res.status(401).render('passwordReset', {
+                message: "The email is incorrect"
+            })
+        } else if (error) {
+            console.log("error");
+        } else {
+            const token = jwt.sign({ id: result[0].id }, process.env.JWT_SECRET, {
+                expiresIn: process.env.JWT_EXPIRATION
+            })
+        }
+
+        const mailOptions = {
+            from: `"Tickets"` + process.env.EMAIL_USER,
+            to: email,
+            subject: 'Password Reset',
+            html: `<h1>Password Reset</h1>
+                <p>Click on the link below to reset your password</p>
+                <a href="http://localhost:5001/reset/${token}">Reset Password</a>`
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        })
+    })
+}

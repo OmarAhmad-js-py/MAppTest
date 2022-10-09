@@ -72,7 +72,7 @@ function getseasons(data) {
         option.addEventListener("click", function () {
             Changedseasons = this.value;
             console.log(Changedseasons);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
+            tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/tv?id=${id}&s=${Changedseasons}&e=${Changedepisode}`);
             makeSlider(data.id, Changedseasons);
 
 
@@ -94,28 +94,28 @@ function makeSlider(id, season) {
         .then(data => {
             return data.json();
         }).then(data => {
-        console.log(data);
-        while (Epslider.firstChild) {
-            Epslider.removeChild(Epslider.firstChild);
-        }
-        for (let i = 0; i < data.episodes.length; i++) {
-            const option = document.createElement("option");
-            option.setAttribute("id", `${i}`);
-            option.value = i + 1;
-            option.innerText = i + 1;
-            console.log(option.value);
-            option.addEventListener("click", function () {
-                Changedepisode = this.value;
-                tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
-                getseasons(Changedepisode);
+            console.log(data);
+            while (Epslider.firstChild) {
+                Epslider.removeChild(Epslider.firstChild);
+            }
+            for (let i = 0; i < data.episodes.length; i++) {
+                const option = document.createElement("option");
+                option.setAttribute("id", `${i}`);
+                option.value = i + 1;
+                option.innerText = i + 1;
+                console.log(option.value);
+                option.addEventListener("click", function () {
+                    Changedepisode = this.value;
+                    tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/tv?id=${id}&s=${Changedseasons}&e=${Changedepisode}`);
+                    getseasons(Changedepisode);
 
-            });
-            Epslider.appendChild(option);
-        }
+                });
+                Epslider.appendChild(option);
+            }
 
-    }).catch((err) => {
-        console.log("ERROR: " + err.message)
-    })
+        }).catch((err) => {
+            console.log("ERROR: " + err.message)
+        })
 }
 
 makeSlider(id);
@@ -130,7 +130,7 @@ function tvshow_getShow() {
             getseasons(data);
             makeSlider(id, Changedseasons)
             console.log(data);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
+            tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/tv?id=${id}&s=${Changedseasons}&e=${Changedepisode}`);
             backdrop.setAttribute("style", `background-image: url(${IMG_URL_large + data.backdrop_path})`);
         });
 }
@@ -156,7 +156,7 @@ function showMovies() {
 
             }
 
-            const {poster_path, name, overview, first_air_date, vote_average, genres} = data;
+            const { poster_path, name, overview, first_air_date, vote_average, genres } = data;
 
             console.log(genres);
 
@@ -221,7 +221,7 @@ function tvshow_getRec() {
             console.log(data);
             data.results.map((item, index) => {
                 console.log(item);
-                const {poster_path, name, vote_average,id} = item;
+                const { poster_path, name, vote_average, id } = item;
                 const movieEl = document.createElement("div");
                 movieEl.classList.add("col-md-3", "col-sm-6", "col-6");
                 movieEl.style = "margin-bottom: 20px";
@@ -290,7 +290,7 @@ function sendRecommended() {
         localStorage.setItem("Recommended", "[]");
     }
 
-    recommend.addEventListener("click", function (e) {
+    recommend.addEventListener("click", (e) => {
         e.preventDefault();
 
         const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"));
@@ -319,3 +319,4 @@ function sendRecommended() {
 }
 
 sendRecommended();
+

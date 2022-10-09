@@ -53,29 +53,20 @@
                   <input id="file" type="file" name="profileImg" accept="image/*" />
                 </form>
                 {{#if user.profile_img}}
-                <img src="{{user.profile_img}}" id="output" width="200" />
+                <img src="" id="output" width="200" />
                 {{else}}
                 <img src="../avatar.png" id="output" width="200" />
                 {{/if}}
               </div>
 
               <div class="mt-3">
-                <h4>{{user.name}}
-
-
-                </h4>
+                <h4>{{user.name}}</h4>
                 <p class="text-secondary mb-1">Full Stack Developer</p>
                 <p class="text-muted font-size-sm">Bay Area, San Francisco,
                   CA</p>
                 <button class="btn btn-primary">Follow</button>
                 <button class="btn btn-outline-primary">Message</button>
               </div>
-              <div class="mt-4">
-
-                <input form="myform" type="submit" class="btn btn-primary">
-
-              </div>
-
             </div>
           </div>
           <div class="card mt-3" id="Bio">
@@ -149,9 +140,6 @@
       </div>
 
     </div>
-  </div>
-
-  </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"

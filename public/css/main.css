@@ -356,7 +356,7 @@ section.get-started .overlay {
 .show {
   display: block;
   border-radius: 2px;
-  transition: all 0.2s ease-in-out;
+  transition: all .2s ease-in-out;
 }
 
 .show-header {
@@ -420,7 +420,17 @@ section.get-started .overlay {
   content: "";
 }
 
+/*slide in to the screen */
+.rounded-img-preAn {
+ transform: translateX(-200px);
+ opacity: 0;
+ transition: 250ms;
+}
 
+.slidein{
+  transform: translateX(0px) translateY(0px);
+  opacity: 1;
+}
 
 @media only screen and (max-width: 991px) {
   .show-header {
@@ -874,6 +884,8 @@ header {
   background-color: #000;
 
 }
+
+
 
 .search {
   background-color: #7e39ec;
