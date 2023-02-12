@@ -1,4 +1,5 @@
 const id = window.location.href.split('=')[1]
+let imdb_id;
 console.log("hello")
 const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -72,57 +73,13 @@ function tvshow_getShow() {
         .then(data => {
             document.getElementById("currentPage").innerText = `${data.title}`;
             console.log(data);
+            imdb_id = data.imdb_id
             tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/movie?id=${id}`);
             backdrop.setAttribute("style", `background-image: url(${IMG_URL_large + data.backdrop_path})`);
         });
 }
 
 tvshow_getShow();
-
-let prevent_bust = false;
-let from_loading_204 = false;
-let frame_loading = false;
-let prevent_bust_timer = 0;
-let primer = true;
-
-tvshow.addEventListener("load", () => {
-    prevent_bust = !from_loading_204 && frame_loading;
-    if (from_loading_204) from_loading_204 = false;
-    if (prevent_bust) {
-        console.log("prevented");
-        prevent_bust_timer = 500;
-    }
-})
-function frameLoad() {
-    console.log("frameLoad");
-    if (!primer) {
-        from_loading_204 = true;
-        window.top.location = '/?204';
-        prevent_bust = false;
-        frame_loading = true;
-        prevent_bust_timer = 1000;
-    } else {
-        primer = false;
-    }
-}
-setInterval(() => {
-    if (prevent_bust_timer > 0) {
-        if (prevent_bust) {
-            from_loading_204 = true;
-            window.top.location = '/?204';
-            prevent_bust = false;
-        } else if (prevent_bust_timer === 1) {
-            frame_loading = false;
-            prevent_bust = false;
-            from_loading_204 = false;
-            prevent_bust_timer === 0;
-        }
-    }
-    prevent_bust_timer--;
-    if (prevent_bust_timer === -100) {
-        prevent_bust_timer = 0;
-    }
-}, 1);
 
 
 function showMovies() {
@@ -223,7 +180,7 @@ function tvshow_getRec() {
 
 tvshow_getRec();
 
-async function sendWatchList() {
+function sendWatchList() {
     if (localStorage.getItem("Watchlist") == null) {
         localStorage.setItem("Watchlist", "[]");
     }
@@ -232,8 +189,8 @@ async function sendWatchList() {
         e.preventDefault();
 
         const StoredWatchlist = JSON.parse(localStorage.getItem("Watchlist"));
-        if (!StoredWatchlist.includes(id)) {
-            StoredWatchlist.push(id);
+        if (!StoredWatchlist.includes(imdb_id)) {
+            StoredWatchlist.push(imdb_id);
             localStorage.setItem("Watchlist", JSON.stringify(StoredWatchlist));
 
 
@@ -244,7 +201,7 @@ async function sendWatchList() {
         const options = {
             method: "POST", headers: {
                 "Content-Type": "application/json",
-            }, body: localStorage.getItem("Watchlist"),
+            }, body: imdb_id,
         };
 
         fetch("/watchlistAPI", options).then(res => {
@@ -256,7 +213,6 @@ async function sendWatchList() {
 sendWatchList();
 
 function sendRecommended() {
-
     if (localStorage.getItem("Recommended") == null) {
         localStorage.setItem("Recommended", "[]");
     }
@@ -265,8 +221,8 @@ function sendRecommended() {
         e.preventDefault();
 
         const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"));
-        if (!StoredRecommended.includes(id)) {
-            StoredRecommended.push(id);
+        if (!StoredRecommended.includes(imdb_id)) {
+            StoredRecommended.push(imdb_id);
 
             localStorage.setItem("Recommended", JSON.stringify(StoredRecommended));
 

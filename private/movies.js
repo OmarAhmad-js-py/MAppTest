@@ -99,11 +99,6 @@ const prev = document.getElementById("prev")
 const next = document.getElementById("next")
 const current = document.getElementById("current")
 
-
-
-
-
-
 let currentPage = 1;
 let NextPage = 2;
 let prevPage = 3;
@@ -161,22 +156,13 @@ function highlightSelections() {
     }
 }
 function ClearBtn() {
-    let ClearBtn = document.getElementById("clear");
-    if (ClearBtn) {
-        ClearBtn.classList.add('highlight');
+    const ClearBtn = document.getElementById("clear");
+    ClearBtn.addEventListener("click", () => {
+        selectedGenre = [];
+        setGenre();
+        getMovies(API_URL);
+    })
 
-    } else {
-        let clear = document.createElement("div");
-        clear.classList.add("tag", "highlight");
-        clear.id = "clear";
-        clear.innerText = "Clear";
-        clear.addEventListener("click", () => {
-            selectedGenre = [];
-            setGenre();
-            getMovies(API_URL);
-        })
-        tagsEl.append(clear)
-    }
 }
 
 getMovies(API_URL);

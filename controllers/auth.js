@@ -2,32 +2,40 @@ const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { promisify } = require('util');
+const { Pool } = require('pg')
 const nodemailer = require("nodemailer");
 
-const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
+const client = new Pool({
     user: process.env.DATABASE_USER,
+    database: process.env.DATABASE,
     password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE
-});
+    port: process.env.PORT,
+    host: process.env.HOST,
+})
+
 
 
 exports.register = (req, res) => {
     console.log(req.body)
-
-
     const { name, email, password, passwordConfirm } = req.body;
 
-    db.query('SELECT email FROM users WHERE email = ?', [email], async (error, results) => {
+    const query = `
+    SELECT email
+    FROM users
+    WHERE email = $1
+    `;
+    const values = [email];
+    client.query(query, values, async (error, results) => {
+        console.log(results.rows)
         if (error) {
             console.log(error);
         }
-
-        if (results.length > 0) {
+        if (results.rows > 0) {
             return res.render('register', {
                 message: 'That email is already in use'
             })
-        } else if (password !== passwordConfirm) {
+        }
+        if (password !== passwordConfirm) {
             return res.render('register', {
                 message: 'Passwords do not match'
             })
@@ -62,13 +70,12 @@ exports.register = (req, res) => {
 
         let currentdate = new Date()
         let newdate = `${currentdate.getDate()}-${currentdate.getMonth()}-${currentdate.getFullYear()}`;
-
-        db.query("INSERT INTO users SET ?", {
-            name: name,
-            email: email,
-            password: hashedPassword,
-            Joined: newdate,
-        }, (error, results) => {
+        const query = `
+            INSERT INTO users (name, email, password, joined)
+            VALUES ($1, $2, $3, $4)
+        `;
+        const values = [name, email, hashedPassword, newdate];
+        client.query(query, values, (error, results) => {
             if (error) {
                 console.log(error);
             } else {
@@ -95,28 +102,32 @@ exports.login = async (req, res) => {
             })
         }
 
-        db.query('SELECT *  FROM users WHERE email = ?', [email], async (error, result) => {
-            console.log(result);
-            if (!(await bcrypt.compare(password, result[0].password)) || !result) {
+        client.query('SELECT *  FROM users WHERE email = $1', [email], async (error, result) => {
+            result = result.rows
+            if (result.length === 0) {
                 res.status(401).render('login', { message: "The email or password is incorrect" })
-            } else if (error) {
-                console.log("error");
             } else {
-                const id = result[0].id;
+                if (!(await bcrypt.compare(password, result[0].password)) || !result) {
+                    res.status(401).render('login', { message: "The email or password is incorrect" })
+                } else if (error) {
+                    console.log("error");
+                } else {
+                    const id = result[0].id;
 
-                const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-                    expiresIn: process.env.JWT_EXPIRATION
-                })
+                    const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+                        expiresIn: process.env.JWT_EXPIRATION
+                    })
 
-                console.log("The token is:" + token)
+                    console.log("The token is:" + token)
 
 
-                const cookieOptions = {
-                    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRATION * 24 * 60 * 60 * 1000),
-                    httpOnly: true
+                    const cookieOptions = {
+                        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRATION * 24 * 60 * 60 * 1000),
+                        httpOnly: true
+                    }
+                    res.cookie("jwt", token, cookieOptions);
+                    res.status(200).redirect("/profile");
                 }
-                res.cookie("jwt", token, cookieOptions);
-                res.status(200).redirect("/profile");
             }
         })
 
@@ -128,14 +139,12 @@ exports.login = async (req, res) => {
 
 exports.isLoggedIn = async (req, res, next) => {
     if (req.cookies.jwt) {
+        console.log(req.cookies.jwt)
         try {
             const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
-            db.query('SELECT *  FROM users WHERE id = ?', [decoded.id], (error, result) => {
-                
-                if (!result) {
-                    return next();
-                }
-
+            client.query('SELECT *  FROM users WHERE id = $1', [decoded.id], (error, result) => {
+                result = result.rows
+                if (!result) return next();
                 req.user = result[0];
                 return next();
             });
@@ -165,7 +174,8 @@ exports.checkVerification = async (req, res, next) => {
         try {
             const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
 
-            db.query('SELECT *  FROM users WHERE id = ?', [decoded.id], async (error, result) => {
+            client.query('SELECT *  FROM users WHERE id = $1', [decoded.id], async (error, result) => {
+                result = result.rows
                 if (result[0].Verfication === "verifed") {
                     return next();
                 } else {
@@ -211,7 +221,7 @@ exports.checkVerification = async (req, res, next) => {
 exports.passwordReset = async (req, res, next) => {
     const { email } = req.body;
     console.log(email);
-    db.query('SELECT *  FROM users WHERE email = ?', [email], (error, result) => {
+    client.query('SELECT *  FROM users WHERE email = ?', [email], (error, result) => {
         if (!result) {
             return res.status(401).render('passwordReset', {
                 message: "The email is incorrect"

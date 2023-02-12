@@ -128,21 +128,13 @@ function setGenre() {
 
 
 function ClearBtn() {
-    let ClearBtn = document.getElementById("clear");
-    if (ClearBtn) {
-        ClearBtn.classList.add("highlight");
-    } else {
-        let clear = document.createElement("div");
-        clear.classList.add("tag", "highlight");
-        clear.id = "clear";
-        clear.innerText = "Clear";
-        clear.addEventListener("click", () => {
-            selectedGenre = [];
-            setGenre();
-            getMovies(API_URL);
-        });
-        tagsEl.append(clear);
-    }
+    const ClearBtn = document.getElementById("clear");
+    ClearBtn.addEventListener("click", () => {
+        selectedGenre = [];
+        setGenre();
+        getMovies(API_URL);
+    });
+
 }
 
 function highlightSelections() {
@@ -210,7 +202,7 @@ function showMovies(data) {
       </div>
       <div class="movie-content">
         <h2>
-        <a href="/singletvshow" id="${id}" class="link_video">${name}</a>
+        <a href="#" id="${id}" class="link_video">${name}</a>
         </h2>
         <span class="movie-meta">
           <span class="movie-meta-item"

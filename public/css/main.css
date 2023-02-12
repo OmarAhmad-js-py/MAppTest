@@ -14,6 +14,8 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+
+
 /* begin navbar */
 
 nav {
@@ -118,8 +120,49 @@ nav {
 .nav-item .dropdown-menu {
   background: purple;
   border-radius: 5px;
-  width: max-content;
+  width: fit-content;
+  column-count: 2;
+  column-gap: 5px;
 }
+
+ .dropdown_container{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  gap: 50px;
+  margin: 20px 20px 20px 10px;
+ }
+
+  /* make a reset button */
+  .reset_btn {
+    background: #434F5B;
+    border-radius: 5px;
+    color: #fb32b9;
+    border: none;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    margin: 0;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+
+.dropdown_header {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: #ebebeb;
+  margin-right: 20px;
+  text-align: 20px;
+}
+
 
 
 .container .alert {
@@ -424,7 +467,12 @@ section.get-started .overlay {
 .rounded-img-preAn {
  transform: translateX(-200px);
  opacity: 0;
- transition: 250ms;
+ transition: 550ms;
+}
+.rounded-img-preAn_right {
+ transform: translateX(200px);
+ opacity: 0;
+ transition: 550ms;
 }
 
 .slidein{
@@ -773,6 +821,8 @@ section.get-started .overlay {
   background-repeat: no-repeat;
 }
 
+
+
 .backdrop:before {
   content: "";
   position: absolute;
@@ -954,6 +1004,9 @@ header {
 
 .card-text {
   width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .card-title {
   margin-bottom: 0.75rem;
@@ -1088,7 +1141,6 @@ ul.tvseasons {
   margin: 100px auto;
   margin-left: 219px;
   overflow: hidden;
-
   transition: all 0.4s;
 }
 
@@ -1112,8 +1164,10 @@ div#letstalk {
   box-shadow: 0 4px 10px 4px rgba(176, 195, 210, 0.3);
 }
 .tag.highlight {
-  background-color: rgb(255, 0, 0);
-  text-after-overflow: multiply;
+  background-color: #434F5B;
+  width: 100%;
+  border-radius: 5px;
+  padding: 2px;
 }
 .searchbox {
   width: fit-content;
@@ -1250,7 +1304,6 @@ form select,
 }
 
 .form-control {
-  width: 100%;
   height: 75px;
   color: #555;
   border: none !important;
@@ -1278,6 +1331,7 @@ form select,
   opacity: 0.8;
 }
 .pagination {
+  
   display: flex;
   margin: 10px 30px;
   align-items: center;
@@ -1341,6 +1395,7 @@ footer.footer {
 }
 
 .footer {
+  width: 100%;
   background: rgb(64, 26, 130);
   background: linear-gradient(
     90deg,

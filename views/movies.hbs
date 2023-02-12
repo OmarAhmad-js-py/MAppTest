@@ -69,12 +69,20 @@
             ><i class="fas fa-crown"></i> Genre</a
           >
           
-          <div id="tags"class="dropdown-menu">
+          <div class="dropdown-menu">
+            <div class="dropdown_container">
+            <div class="dropdown_header">
+              <span>Genres</span>
+              <button id="clear" class="reset_btn ">Clear</button>
+            </div>
+            <div id="tags"> 
             <a class="tag" href="#">Adventure</a>
             <a class="tag" href="#">Horror</a>
             <a class="tag" href="#">Animation</a>
             <a class="tag" href="#">Comedy</a>
             <a class="tag" href="#">Fantasy</a>
+            </div>
+           </div>
           </div>
         </li>
         <li class="nav-item active">
@@ -93,7 +101,7 @@
     </nav>
   <div class="breadcrumb-nav-list" aria-label="breadcrumb">
     <ol class="breadcrumb-nav">
-      <li class="breadcrumb-item"><a href="/index">Home</a></li>
+      <li class="breadcrumb-item"><a href="/home">Home</a></li>
       <li class="breadcrumb-item"><a href="/movies">movies</a></li>
       <li class="breadcrumb-item active" aria-current="page"><span id="currentPage"></span></li>
     </ol>
@@ -146,7 +154,7 @@
           <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
             <ul class="list-inline mb-0">
               <li class="list-inline-item mr-3">
-                <a href="https://linkedin.com/in/byalk" class="footer-fb">
+                <a href="#" class="footer-fb">
                   <i class="fab fa-linkedin fa-2x fa-fw"></i>
                 </a>
               </li>
@@ -181,6 +189,6 @@
       integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
       crossorigin="anonymous"
     ></script>
-    <script src="script.js"></script>
+    <script src="movies.js"></script>
   </body>
 </html>

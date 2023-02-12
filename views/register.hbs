@@ -10,46 +10,59 @@
             crossorigin="anonymous"
     />
     <link rel="stylesheet" href="../css/style.css" />
-
+    <link rel="stylesheet" href="../css/main.css" />
+    
     <title>Document</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md">
-    <a class="navbar-brand" href="/"><img src="../logo.png" /></a>
-    <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-    ><i class="fas fa-bars"></i>
+  <nav class="navbar navbar-expand-md">
+    <a class="navbar-brand" href="/"><img src="../logo.png"  alt="logo" /></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/login">login</a>
-            </li>
+      <ul class="navbar-nav mr-auto">
 
-            <li class="nav-item active">
-                <a class="nav-link" href="/register">Register</a>
-            </li>
+        {{#if user}}
+        <li class="nav-item">
+          <a class="nav-link" href="/movies">Movies</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/profile">Profile</a>
+        </li>
 
-        </ul>
+        <li class="nav-item active">
+          <a class="nav-link" href="/auth/logout">Logout</a>
+        </li>
+        {{else}}
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
 
+        <li class="nav-item active">
+          <a class="nav-link" href="/Register">Register</a>
+        </li>
+        {{/if}}
+
+      </ul>
+      {{#if user}}
+      <div class="profile-pic rounded-img-preAn">
+          <img src="{{user.profile_img}}" id="profile-output" width="200"/>
+      </div>
+      {{else}}
+
+      {{/if}}
     </div>
-</nav>
+
+
+  </nav>
 
 <div class="container loginContainer">
-    <div class="row  ">
-        <div class="col-sm-8 ">
-            <img src="../oleg-demakov-NIIlEEIORu0-unsplash.jpg" width="700px" height="800px" alt=""/>
-        </div>
         <div class="col-sm-3 login-form1">
             <div class="Welcometext">
                 <p>Welcome</p>
@@ -57,33 +70,29 @@
                     Create a new account
                 </h1>
             </div>
-
-
-
             <form action="/auth/register" method="post">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" />
-                    <label class="label" for="email">Email</label>
+                <div class=" formInputs">
+                    <input type="text" class="form-control"  placeholder="name" id="name" name="name" />
+
                     <input
                             type="email"
+                            placeholder="email"
                             class="form-control"
                             id="email"
                             name="email"
                     />
 
-
-                    <label class="label" for="password">Password</label>
                     <input
                             type="password"
+                            placeholder="password"
                             class="form-control"
                             id="password"
                             name="password"
                     />
 
-                    <label for="password">Confirm Password</label>
                     <label for="passwordConfirm"></label><input
                             type="password"
+                            placeholder="confirm password"
                             class="form-control"
                             id="passwordConfirm"
                             name="passwordConfirm"
@@ -98,10 +107,7 @@
             {{#if message}}
                 <h4 class="alert alert-primary mt-4">{{message}}</h4>
             {{/if}}
-            <div class="card-text">
-                <p>Already have an account? <a href="/login">Login here</a></p>
-            </div>
-        </div>
+            
 
     </div>
 </div>

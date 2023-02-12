@@ -1,6 +1,6 @@
 const express = require("express");
 const authController = require("../controllers/auth");
-const mysql = require("mysql");
+const { Pool } = require('pg')
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
@@ -11,12 +11,13 @@ const removeValue = require("remove-value");
 const { query } = require("express-validator");
 const axios = require("axios");
 
-const db = mysql.createConnection({
-  host: process.env.DATABASE_HOST,
+const db = new Pool({
   user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE,
-});
+  password: process.env.DATABASE_PASSWORD,
+  port: process.env.PORT,
+  host: process.env.HOST,
+})
 
 router.get("/", authController.isLoggedIn, (req, res) => {
   res.render("index", {
@@ -47,13 +48,12 @@ router.post("/Recommended", authController.isLoggedIn, async (req, res) => {
     req.cookies.jwt,
     process.env.JWT_SECRET
   );
-  console.log("The id is");
-  console.log(req.body);
+  console.log("The id's is " + req.body);
   const RecommendedlistID = [];
   RecommendedlistID.push(JSON.stringify(req.body));
 
   db.query(
-    "UPDATE users SET Recommended = ? WHERE id = ? ",
+    "UPDATE users SET Recommended = $1 WHERE id = $2 ",
     [RecommendedlistID, decoded.id],
     (err, result) => {
       if (err) {
@@ -78,26 +78,32 @@ router.post("/delRW", authController.isLoggedIn, async (req, res) => {
       req.cookies.jwt,
       process.env.JWT_SECRET
     );
-    const watchlistid = JSON.parse(req.user.Watchlist);
+    const watchlistUID = JSON.parse(req.user.watchlist)
     const delTMD = JSON.parse(`["${req.body}"]`);
-
+    console.log(delTMD);
     db.query(
-      "SELECT Watchlist FROM users WHERE id = ? ",
+      "SELECT Watchlist FROM users WHERE id = $1 ",
       [decoded.id],
       async (err, result) => {
         if (err) {
           console.log(err);
         } else {
-          const teditem = diff.same(watchlistid, delTMD);
+          //check if the id is already in the watchlist
+          const teditem = diff.same(watchlistUID, delTMD);
+          console.log(teditem);
           const deleteditem = `'[${teditem}]'`.replace(/[\[\]']+/g, "");
-          // console.log(deleteditem)
-
-          const Changewatchlist = removeValue(watchlistid, deleteditem);
+          const index = watchlistUID.indexOf(deleteditem);
+          console.log(index)
+          console.log(watchlistUID)
+          if (index !== -1) {
+            watchlistUID.splice(index, 1);
+          }
+          console.log(watchlistUID);
           const newwatchlist = [];
-          newwatchlist.push(JSON.stringify(Changewatchlist));
+          newwatchlist.push(JSON.stringify(watchlistUID));
           console.log(newwatchlist);
           db.query(
-            "UPDATE users SET Watchlist = ? WHERE id = ? ",
+            "UPDATE users SET Watchlist = $1 WHERE id = $2 ",
             [newwatchlist, decoded.id],
             (err, result) => {
               if (err) {
@@ -126,7 +132,7 @@ router.post("/delRecommended", authController.isLoggedIn, async (req, res) => {
     const delTMD = JSON.parse(`["${req.body}"]`);
 
     db.query(
-      "SELECT Recommended FROM users WHERE id = ? ",
+      "SELECT Recommended FROM users WHERE id = $1 ",
       [decoded.id],
       async (err, result) => {
         if (err) {
@@ -144,7 +150,7 @@ router.post("/delRecommended", authController.isLoggedIn, async (req, res) => {
           newdelRecommended.push(JSON.stringify(ChangedelRecommended));
           console.log(newdelRecommended);
           db.query(
-            "UPDATE users SET Recommended = ? WHERE id = ? ",
+            "UPDATE users SET Recommended = $1 WHERE id = $2 ",
             [newdelRecommended, decoded.id],
             (err, result) => {
               if (err) {
@@ -180,7 +186,7 @@ router.post("/send", authController.isLoggedIn, async (req, res) => {
   console.log(profileImg);
 
   db.query(
-    "UPDATE users SET profile_img = ? WHERE id = ? ",
+    "UPDATE users SET profile_img = $1 WHERE id = $2 ",
     [profileImg, decoded.id],
     (err, rows) => {
       console.log(rows);
@@ -195,16 +201,16 @@ router.post("/send", authController.isLoggedIn, async (req, res) => {
   );
 });
 
-//make a route to get blob file from the mysql database
 router.get("/getBlob", async (req, res) => {
   const decoded = await promisify(jwt.verify)(
     req.cookies.jwt,
     process.env.JWT_SECRET
   );
   db.query(
-    "SELECT profile_img FROM users WHERE id = ? ",
+    "SELECT profile_img FROM users WHERE id = $1 ",
     [decoded.id],
     async (err, rows) => {
+      rows = rows.rows
       if (!err) {
         const img = rows[0].profile_img;
         let buffer = Buffer.from(await img);
@@ -278,20 +284,36 @@ router.post("/watchlistAPI", authController.isLoggedIn, async (req, res) => {
   const WatchlistID = [];
   WatchlistID.push(JSON.stringify(req.body));
   console.log(WatchlistID);
+  const Selectquery = "SELECT watchlist FROM users WHERE id = $1"
+  try {
+    db.query(Selectquery, [decoded.id], async (err, result) => {
+      if (err) throw err;
+      const watchlist = JSON.parse(result.rows[0].watchlist)
+      console.log(watchlist)
+      console.log(req.body)
+      watchlist.push(req.body)
+      console.log(watchlist)
 
-  db.query(
-    "UPDATE users SET Watchlist = ? WHERE id = ? ",
-    [WatchlistID, decoded.id],
-    (err, result) => {
-      if (err) {
-        res.redirect(authController.logout, "/Login").send(err);
-        console.log(err);
-      } else {
-        console.log(result);
-        res.status(500);
-      }
-    }
-  );
+      db.query(
+        "UPDATE users SET Watchlist = $1 WHERE id = $2 ",
+        [watchlist, decoded.id],
+        (err, result) => {
+          if (err) {
+            res.redirect(authController.logout, "/Login").send(err);
+            console.log(err);
+          } else {
+            console.log("Watchlist Updated");
+            res.status(500);
+          }
+        }
+      );
+
+
+    });
+  } catch (error) {
+    console.log(error)
+  }
+
 });
 
 router.get("/Watchlist", authController.isLoggedIn, (req, res) => {
@@ -305,6 +327,7 @@ router.get("/Watchlist", authController.isLoggedIn, (req, res) => {
 });
 
 router.get("/Wathclater", authController.isLoggedIn, (req, res) => {
+
   res.json(req.user);
 });
 
@@ -329,7 +352,7 @@ router.get(
       ]);
       if (decoded.email === req.user.email) {
         db.query(
-          "UPDATE users SET Verfication = ? WHERE id = ? ",
+          "UPDATE users SET Verfication = $1 WHERE id =$2 ",
           ["verifed", decoded_id.id],
           (err, rows) => {
             if (err) {

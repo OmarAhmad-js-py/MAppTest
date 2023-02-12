@@ -123,12 +123,22 @@ body {
 
 .loginContainer {
   margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-form1 {
   justify-content: center;
   display: flex;
   flex-direction: column;
+}
+
+.formInputs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .label {
@@ -144,7 +154,7 @@ body {
 }
 
 .Welcometext {
-  margin-bottom: 2rem;
+  margin-bottom: 10px;
   font-family: "Roboto", sans-serif bold;
   text-align: center;
 }
