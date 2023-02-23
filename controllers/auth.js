@@ -30,7 +30,7 @@ exports.register = (req, res) => {
         if (error) {
             console.log(error);
         }
-        if (results.rows > 0) {
+        if (results.rowCount > 0) {
             return res.render('register', {
                 message: 'That email is already in use'
             })
