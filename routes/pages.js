@@ -20,7 +20,7 @@ const db = new Pool({
   // host: process.env.HOST,
 })
 
-router.get("/", (req, res) => {
+router.get("/", authController.isLoggedIn, (req, res) => {
   res.render("index", {
     user: req.user,
   });
