@@ -44,11 +44,11 @@ function getwatchlistData() {
 
 
 function getWatchlist(data) {
-  const watchlist = data
+  const watchlist = data[0]
   console.log(watchlist)
   const watchlistdata = []
 
-  data.forEach((ids) => {
+  watchlist.forEach((ids) => {
     console.log(ids)
     if (ids.includes('tt')) {
       console.log('movie')
