@@ -6,11 +6,12 @@ const { Pool } = require('pg')
 const nodemailer = require("nodemailer");
 
 const client = new Pool({
-    user: process.env.DATABASE_USER,
-    database: process.env.DATABASE,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.PORT,
-    host: process.env.HOST,
+    connectionString: process.env.DATABASE_URL,
+    // user: process.env.DATABASE_USER,
+    // database: process.env.DATABASE,
+    // password: process.env.DATABASE_PASSWORD,
+    // port: process.env.PORT,
+    // host: process.env.HOST,
 })
 
 

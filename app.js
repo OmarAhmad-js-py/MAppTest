@@ -11,13 +11,14 @@ const app = express();
 
 console.log(process.env.API_KEY)
 
-const client = new Pool({
-    user: process.env.DATABASE_USER,
-    database: process.env.DATABASE,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.PORT,
-    host: process.env.HOST,
-})
+// const client = new Pool({
+//     connectionString: process.env.DATABASE_URL,
+//     // user: process.env.DATABASE_USER,
+//     // database: process.env.DATABASE,
+//     // password: process.env.DATABASE_PASSWORD,
+//     // port: process.env.PORT,
+//     // host: process.env.HOST,
+// })
 
 
 const publicDirectory = path.join(__dirname, './public')
@@ -33,13 +34,13 @@ app.use(express.json({ limit: "1mb" }))
 app.use(cookieParser());
 app.set("view engine", "hbs");
 
-client.connect((error) => {
-    if (error) {
-        console.log(error);
-    } else {
-        console.log("client Connected...");
-    }
-})
+// client.connect((error) => {
+//     if (error) {
+//         console.log(error);
+//     } else {
+//         console.log("client Connected...");
+//     }
+// })
 
 
 
