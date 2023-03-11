@@ -297,8 +297,7 @@ router.get("/getBlob", authController.isLoggedIn, async (req, res) => {
   console.log(req.cookies.jwt)
   try {
     if (req.user) {
-      const [decoded, decoded_id] = await Promise.all([
-        promisify(jwt.verify)(req.params.token, process.env.JWT_SECRET),
+      const [decoded] = await Promise.all([
         promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET),
       ]);
       db.query(
@@ -323,7 +322,9 @@ router.get("/getBlob", authController.isLoggedIn, async (req, res) => {
     console.log(error);
     return;
   }
+
 });
+
 
 router.get(
   "/movies",
