@@ -293,26 +293,36 @@ router.post("/send", authController.isLoggedIn, async (req, res) => {
   );
 });
 
-router.get("/getBlob", async (req, res) => {
-  const decoded = await promisify(jwt.verify)(
-    req.cookies.jwt,
-    process.env.JWT_SECRET
-  );
-  db.query(
-    "SELECT profile_img FROM users WHERE id = $1 ",
-    [decoded.id],
-    async (err, rows) => {
-      rows = rows.rows
-      if (!err) {
-        const img = rows[0].profile_img;
-        let buffer = await img;
-        res.send("data:png" + ";base64," + buffer.toString("base64"));
-      } else {
-        res.status(500).send(err);
-        console.log(err);
-      }
+router.get("/getBlob", authController.isLoggedIn, async (req, res) => {
+  console.log(req.cookies.jwt)
+  try {
+    if (req.user) {
+      const [decoded, decoded_id] = await Promise.all([
+        promisify(jwt.verify)(req.params.token, process.env.JWT_SECRET),
+        promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET),
+      ]);
+      db.query(
+        "SELECT profile_img FROM users WHERE id = $1 ",
+        [decoded.id],
+        async (err, rows) => {
+          rows = rows.rows
+          if (!err) {
+            const img = rows[0].profile_img;
+            let buffer = await img;
+            res.send("data:png" + ";base64," + buffer.toString("base64"));
+          } else {
+            res.status(500).send(err);
+            console.log(err);
+          }
+        }
+      );
+    } else {
+      res.redirect("/login");
     }
-  );
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 });
 
 router.get(
