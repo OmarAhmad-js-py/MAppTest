@@ -329,6 +329,7 @@ router.get("/getBlob", authController.isLoggedIn, async (req, res) => {
 
 });
 
+
 router.get(
   "/movies",
   [authController.isLoggedIn, authController.checkVerification],
