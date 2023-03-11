@@ -10,14 +10,7 @@ const file = document.getElementById("file");
 
 
 //get data from server "/getblob" 
-function getData() {
-    fetch(`/getBlob`)
-        .then(res => res.text())
-        .then(data => {
-            profile.src = data;
-        })
-}
-getData();
+
 
 getrecommendedData();
 
@@ -156,6 +149,14 @@ file.addEventListener("change", (e) => {
     }
 });
 
-
+function getData() {
+    fetch(`/getBlob`)
+        .then(res => res.text())
+        .then(data => {
+            console.log(data)
+            profile.src = data;
+        })
+}
+getData();
 
 

@@ -307,8 +307,12 @@ router.get("/getBlob", authController.isLoggedIn, async (req, res) => {
           rows = rows.rows
           if (!err) {
             const img = rows[0].profile_img;
-            let buffer = await img;
-            res.send("data:png" + ";base64," + buffer.toString("base64"));
+            let buffer = await img ? img : null;
+            if (buffer == null) {
+              res.send("../avatar.png")
+            } else {
+              res.send("data:png" + ";base64," + buffer.toString("base64"));
+            }
           } else {
             res.status(500).send(err);
             console.log(err);
