@@ -192,21 +192,23 @@ function sendWatchList() {
         if (!StoredWatchlist.includes(imdb_id)) {
             StoredWatchlist.push(imdb_id);
             localStorage.setItem("Watchlist", JSON.stringify(StoredWatchlist));
-
-
         } else {
             console.log(JSON.parse(localStorage.getItem("Watchlist")));
             return false;
         }
+
+
         const options = {
             method: "POST", headers: {
                 "Content-Type": "application/json",
-            }, body: imdb_id,
+            }, body: JSON.stringify({ imdb_id: imdb_id }),
+
         };
 
         fetch("/watchlistAPI", options).then(res => {
             console.log(res);
-        });
+        }
+        );
     });
 }
 
@@ -245,7 +247,6 @@ function sendRecommended() {
     });
 }
 
-//run all functions here
 
 
 sendRecommended();

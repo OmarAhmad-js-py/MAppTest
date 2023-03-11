@@ -16,19 +16,19 @@ const prev = document.getElementById("prev")
 const next = document.getElementById("next")
 const current = document.getElementById("current")
 
-const video1 = document.getElementById("video1")
+
 
 
 getwatchlistData();
 function getwatchlistData() {
-  const uri = '/Wathclater'
+  const uri = '/Watchlater'
   let h = new Headers();
   h.append('Accept', 'application/json')
 
   let req = new Request(uri, {
     method: 'GET',
     headers: h,
-    mode: 'cors'
+    mode: 'cors',
   });
 
   fetch(req)
@@ -44,11 +44,12 @@ function getwatchlistData() {
 
 
 function getWatchlist(data) {
-  const watchlist = JSON.parse(data.watchlist)
+  const watchlist = data
   console.log(watchlist)
   const watchlistdata = []
 
-  watchlist.forEach((ids) => {
+  data.forEach((ids) => {
+    console.log(ids)
     if (ids.includes('tt')) {
       console.log('movie')
       fetch(BASE_URL + "/movie/" + ids + '?' + API_KEY + '&language=en-US')
@@ -94,9 +95,7 @@ function showWatchlist(watchlistdata) {
           <img 
           style="height: auto; width: 100%;"  src="${poster_path ? IMG_size + poster_path : "https://via.placeholder.com/500x750"}"
           />
-          
           </div>
-       
       </div>
       <div class="movie-content">
         <h2>
@@ -155,11 +154,6 @@ function showWatchlist(watchlistdata) {
       window.location.reload()
 
     })
-
-
-
-
-
 
   })
 }

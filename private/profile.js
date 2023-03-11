@@ -15,14 +15,15 @@ function getData() {
         .then(res => res.text())
         .then(data => {
             profile.src = data;
-
         })
 }
 getData();
 
 getrecommendedData();
+
 function getrecommendedData() {
-    const uri = "/Wathclater";
+    // get the recommended data from the server
+    const uri = "/Watchlater";
     let h = new Headers();
     h.append("Accept", "application/json");
 
@@ -35,8 +36,12 @@ function getrecommendedData() {
     fetch(req)
         .then(res => res.json())
         .then((data) => {
-            console.log(data.recommended)
-            getRecommended(data);
+            if (data != null) {
+                console.log(data)
+                getRecommended(data);
+            } else {
+                return;
+            }
         })
         .catch(err => {
             console.log("ERROR: " + err.message);
@@ -44,11 +49,7 @@ function getrecommendedData() {
 }
 
 function getRecommended(data) {
-    const recommended = data.recommended.slice(1, -1);
-    const RecomID = JSON.parse(recommended)
-    const RecomUID = JSON.parse(RecomID)
-    console.log(RecomUID)
-
+    const RecomUID = data[0];
     const Recomlistdata = [];
 
     RecomUID.forEach((ids) => {
@@ -76,6 +77,7 @@ function getRecommended(data) {
 function showRecomlist(Recomlistdata) {
     console.log(Recomlistdata)
     row.innerHTML = ' ';
+    let typefe = []
     Recomlistdata.slice(-6).forEach(movie => {
         const { poster_path, id } = movie;
         const movieEl = document.createElement("div");
@@ -93,33 +95,35 @@ function showRecomlist(Recomlistdata) {
         `;
         row.appendChild(movieEl);
         document.getElementById(id).addEventListener("click", () => {
+            console.log(movie.runtime)
             const movieid = [];
             movieid.push(id);
             window.localStorage.setItem("id", JSON.stringify(id));
-            location.href = "/singlemovie?id=" + id + "";
+            location.href = movie.runtime ? "/singlemovie?id=" + id + "" : "/singletvshow?id=" + id + ""
         });
-        document.getElementById(id).addEventListener("auxclick", (event) => {
-            const ids = []
-            ids.push(JSON.parse(movie.id))
-            console.log(JSON.stringify(ids))
-            const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"))
-            const changed = StoredRecommended.splice(ids, 1)
-            console.log(JSON.stringify(changed))
+        // document.getElementById(id).addEventListener("auxclick", (event) => {
+        //     const ids = []
+        //     console.log()
+        //     ids.push(movie.imdb_id ? movie.imdb_id : movie.id)
+        //     console.log(JSON.stringify(ids))
+        //     const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"))
+        //     const changed = StoredRecommended.splice(ids, 1)
+        //     console.log(JSON.stringify(changed))
 
-            const options = {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: JSON.stringify(ids)
-            }
+        //     const options = {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-type": "application/json"
+        //         },
+        //         body: JSON.stringify(ids)
+        //     }
 
 
-            fetch("/delRecommended", options).then(res => {
-                console.log(res.message);
-            })
-            window.location.reload();
-        });
+        //     fetch("/delRecommended", options).then(res => {
+        //         console.log(res.message);
+        //     })
+        //     window.location.reload();
+        // });
     });
 }
 

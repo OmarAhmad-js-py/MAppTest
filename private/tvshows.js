@@ -176,6 +176,7 @@ function getMovies(url) {
                     prev.classList.remove("disabled");
                     next.classList.remove("disabled");
                 }
+                form.scrollIntoView({ behavior: 'smooth' })
             }
         });
 }
