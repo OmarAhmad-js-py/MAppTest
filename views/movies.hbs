@@ -69,12 +69,20 @@
             ><i class="fas fa-crown"></i> Genre</a
           >
           
-          <div id="tags"class="dropdown-menu">
+          <div class="dropdown-menu">
+            <div class="dropdown_container">
+            <div class="dropdown_header">
+              <span>Genres</span>
+              <button id="clear" class="reset_btn ">Clear</button>
+            </div>
+            <div id="tags"> 
             <a class="tag" href="#">Adventure</a>
             <a class="tag" href="#">Horror</a>
             <a class="tag" href="#">Animation</a>
             <a class="tag" href="#">Comedy</a>
             <a class="tag" href="#">Fantasy</a>
+            </div>
+           </div>
           </div>
         </li>
         <li class="nav-item active">
@@ -91,58 +99,33 @@
     
       </div>
     </nav>
-    <!-- breadcrumbs -->
   <div class="breadcrumb-nav-list" aria-label="breadcrumb">
     <ol class="breadcrumb-nav">
-      <li class="breadcrumb-item"><a href="/index">Home</a></li>
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
       <li class="breadcrumb-item"><a href="/movies">movies</a></li>
       <li class="breadcrumb-item active" aria-current="page"><span id="currentPage"></span></li>
     </ol>
   </div>
-    <!-- /breadcrumbs -->
-    <!-- movie cards -->
     <div class="container">
       <div class="alert alert-primary" role="alert">
-        <i class="fas fa-exclamation-circle"></i> Have fun! Dont be here for too long tho!
+          {{#if message}}
+              <i class="fas fa-exclamation-circle"></i> {{message}}
+          {{else}}
+              <i class="fas fa-exclamation-circle"></i> Have fun! Don't be here for too long tho!
+          {{/if}}
       </div>
       <main id ="main" class="row">
-  
 
-          
        </main>
-       <!-- The overlay -->
-<div id="myNav" class="overlay">
-
-  <!-- Button to close the overlay navigation -->
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-
-  <!-- Overlay content -->
-  <div class="overlay-content" id="overlay-content">
-    <a href="javascript:void(0)" class="arrow left-arrow" id="left-arrow">&#8656;</a> 
-        
-        <a href="javascript:void(0)" class="arrow right-arrow" id="right-arrow" >&#8658;</a>
-
-  </div>
-
 </div>
-</div>
-<!-- Use any element to open/show the overlay navigation menu -->
 <span onclick="openNav()"></span>
-    <!-- /movie cards -->
     <br />
     
-     <!-- /Pagination-->
      <div class="pagination">
       <div class="page" id="prev">Previous Page</div>
       <div class="current" id="current">1</div>
       <div class="page" id="next">Next Page</div>
-
   </div>
-     <!-- /Pagination-->
-    <!-- Newsletter -->
-
-    <!-- /Newsletter -->
-    <!-- Footer -->
     <footer class="footer">
       <div class="container">
         <div class="row">
@@ -171,7 +154,7 @@
           <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
             <ul class="list-inline mb-0">
               <li class="list-inline-item mr-3">
-                <a href="https://linkedin.com/in/byalk" class="footer-fb">
+                <a href="#" class="footer-fb">
                   <i class="fab fa-linkedin fa-2x fa-fw"></i>
                 </a>
               </li>
@@ -190,11 +173,7 @@
         </div>
       </div>
     </footer>
-    <!-- /Footer -->
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -210,6 +189,6 @@
       integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
       crossorigin="anonymous"
     ></script>
-    <script src="script.js"></script>
+    <script src="movies.js"></script>
   </body>
 </html>

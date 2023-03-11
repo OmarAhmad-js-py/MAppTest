@@ -1,4 +1,5 @@
 const id = window.location.href.split('=')[1]
+let imdb_id;
 console.log("hello")
 const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -63,62 +64,6 @@ let Changedseasons = 1;
 let Changedepisode = 1;
 
 
-/*function getseasons(data) {
-    for (let i = 0; i < data.number_of_seasons; i++) {
-        const option = document.createElement("option");
-        option.value = i + 1;
-        option.id = i + 1;
-        option.innerText = i + 1;
-        option.addEventListener("click", function () {
-            Changedseasons = this.value;
-            console.log(Changedseasons);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
-            makeSlider(data.id, Changedseasons);
-
-
-        });
-        Selider.appendChild(option);
-    }
-
-}
-
-function makeSlider(id, season) {
-    const options = {
-        method: "GET", headers: {
-            "Accept": "application/json",
-        }
-    };
-
-
-    fetch(`${BASE_URL}/tv/${id}/season/${season}?${API_KEY}`, options)
-        .then(data => {
-            return data.json();
-        }).then(data => {
-        console.log(data);
-        while (Epslider.firstChild) {
-            Epslider.removeChild(Epslider.firstChild);
-        }
-        for (let i = 0; i < data.episodes.length; i++) {
-            const option = document.createElement("option");
-            option.setAttribute("id", `${i}`);
-            option.value = i + 1;
-            option.innerText = i + 1;
-            console.log(option.value);
-            option.addEventListener("click", function () {
-                Changedepisode = this.value;
-                tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
-                getseasons(Changedepisode);
-
-            });
-            Epslider.appendChild(option);
-        }
-
-    }).catch((err) => {
-        console.log("ERROR: " + err.message)
-    })
-}
-
-makeSlider(id);*/
 
 
 function tvshow_getShow() {
@@ -127,10 +72,9 @@ function tvshow_getShow() {
         .then(res => res.json())
         .then(data => {
             document.getElementById("currentPage").innerText = `${data.title}`;
-            /*getseasons(data);
-            makeSlider(id, Changedseasons)*/
             console.log(data);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/movie?id=${id}`);
+            imdb_id = data.imdb_id
+            tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/movie?id=${id}`);
             backdrop.setAttribute("style", `background-image: url(${IMG_URL_large + data.backdrop_path})`);
         });
 }
@@ -143,7 +87,7 @@ function showMovies() {
         .then(res => res.json())
         .then(data => {
             main.innerHTML = " ";
-            const {poster_path, title, overview, release_date, vote_average, genres} = data;
+            const { poster_path, title, overview, release_date, vote_average, genres } = data;
 
             console.log(genres);
 
@@ -205,7 +149,7 @@ function tvshow_getRec() {
             console.log(data);
             data.results.map((item, index) => {
                 console.log(item);
-                const {poster_path, name, vote_average,id} = item;
+                const { poster_path, name, vote_average, id } = item;
                 const movieEl = document.createElement("div");
                 movieEl.classList.add("col-md-3", "col-sm-6", "col-6");
                 movieEl.style = "margin-bottom: 20px";
@@ -236,7 +180,7 @@ function tvshow_getRec() {
 
 tvshow_getRec();
 
-async function sendWatchList() {
+function sendWatchList() {
     if (localStorage.getItem("Watchlist") == null) {
         localStorage.setItem("Watchlist", "[]");
     }
@@ -245,41 +189,42 @@ async function sendWatchList() {
         e.preventDefault();
 
         const StoredWatchlist = JSON.parse(localStorage.getItem("Watchlist"));
-        if (!StoredWatchlist.includes(id)) {
-            StoredWatchlist.push(id);
+        if (!StoredWatchlist.includes(imdb_id)) {
+            StoredWatchlist.push(imdb_id);
             localStorage.setItem("Watchlist", JSON.stringify(StoredWatchlist));
-
-
         } else {
             console.log(JSON.parse(localStorage.getItem("Watchlist")));
             return false;
         }
+
+
         const options = {
             method: "POST", headers: {
                 "Content-Type": "application/json",
-            }, body: localStorage.getItem("Watchlist"),
+            }, body: JSON.stringify({ imdb_id: imdb_id }),
+
         };
 
         fetch("/watchlistAPI", options).then(res => {
             console.log(res);
-        });
+        }
+        );
     });
 }
 
 sendWatchList();
 
 function sendRecommended() {
-
     if (localStorage.getItem("Recommended") == null) {
         localStorage.setItem("Recommended", "[]");
     }
 
-    recommend.addEventListener("click", function (e) {
+    recommend.addEventListener("click", (e) => {
         e.preventDefault();
 
         const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"));
-        if (!StoredRecommended.includes(id)) {
-            StoredRecommended.push(id);
+        if (!StoredRecommended.includes(imdb_id)) {
+            StoredRecommended.push(imdb_id);
 
             localStorage.setItem("Recommended", JSON.stringify(StoredRecommended));
 
@@ -302,4 +247,7 @@ function sendRecommended() {
     });
 }
 
+
+
 sendRecommended();
+

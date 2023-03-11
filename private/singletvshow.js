@@ -6,42 +6,6 @@ const IMG_URL = "https://image.tmdb.org/t/p/w300";
 const IMG_URL_large = "https://image.tmdb.org/t/p/w1280";
 const searchURL = BASE_URL + "/search/tv?" + API_KEY;
 
-const genre = [{
-    id: 10759, name: "Action & Adventure", icon: "fa-solid fa-location-crosshairs-slash"
-}, {
-    id: 16, name: "Animation", icon: "fa-solid fa-dice-d20"
-}, {
-    id: 35, name: "Comedy", icon: "fa-solid fa-laugh-beam"
-}, {
-    id: 80, name: "Crime", icon: "fa-solid fa-gavel"
-}, {
-    id: 99, name: "Documentary", icon: "fa-solid fa-book-reader"
-}, {
-    id: 18, name: "Drama", icon: "fa-solid fa-theater-masks"
-
-}, {
-    id: 10751, name: "Family", icon: "fa-solid fa-family"
-
-}, {
-    id: 10762, name: "Kids", icon: "fa-solid fa-child"
-}, {
-    id: 9648, name: "Mystery", icon: "fa-solid fa-question-circle"
-}, {
-    id: 10763, name: "News", icon: "fa-solid fa-newspaper"
-}, {
-    id: 10764, name: "Reality", icon: "fa-solid fa-tv"
-}, {
-    id: 10765, name: "Sci-Fi & Fantasy", icon: "fa-solid fa-space-shuttle"
-}, {
-    id: 10766, name: "Soap", //icon for retro tv
-    icon: "fa-solid fa-tv-retro"
-}, {
-    id: 10767, name: "Talk", icon: "fa-solid fa-comments"
-}, {
-    id: 10768, name: "War & Politics", icon: "fa-solid fa-flag"
-}, {
-    id: 37, name: "Western", icon: "fa-solid fa-cactus"
-},];
 
 
 const watchlist = document.getElementById("watchlist");
@@ -72,7 +36,7 @@ function getseasons(data) {
         option.addEventListener("click", function () {
             Changedseasons = this.value;
             console.log(Changedseasons);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
+            tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/tv?id=${id}&s=${Changedseasons}&e=${Changedepisode}`);
             makeSlider(data.id, Changedseasons);
 
 
@@ -94,28 +58,28 @@ function makeSlider(id, season) {
         .then(data => {
             return data.json();
         }).then(data => {
-        console.log(data);
-        while (Epslider.firstChild) {
-            Epslider.removeChild(Epslider.firstChild);
-        }
-        for (let i = 0; i < data.episodes.length; i++) {
-            const option = document.createElement("option");
-            option.setAttribute("id", `${i}`);
-            option.value = i + 1;
-            option.innerText = i + 1;
-            console.log(option.value);
-            option.addEventListener("click", function () {
-                Changedepisode = this.value;
-                tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
-                getseasons(Changedepisode);
+            console.log(data);
+            while (Epslider.firstChild) {
+                Epslider.removeChild(Epslider.firstChild);
+            }
+            for (let i = 0; i < data.episodes.length; i++) {
+                const option = document.createElement("option");
+                option.setAttribute("id", `${i}`);
+                option.value = i + 1;
+                option.innerText = i + 1;
+                console.log(option.value);
+                option.addEventListener("click", function () {
+                    Changedepisode = this.value;
+                    tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/tv?id=${id}&s=${Changedseasons}&e=${Changedepisode}`);
+                    getseasons(Changedepisode);
 
-            });
-            Epslider.appendChild(option);
-        }
+                });
+                Epslider.appendChild(option);
+            }
 
-    }).catch((err) => {
-        console.log("ERROR: " + err.message)
-    })
+        }).catch((err) => {
+            console.log("ERROR: " + err.message)
+        })
 }
 
 makeSlider(id);
@@ -130,7 +94,7 @@ function tvshow_getShow() {
             getseasons(data);
             makeSlider(id, Changedseasons)
             console.log(data);
-            tvshow.setAttribute("src", `https://www.2embed.ru/embed/tmdb/tv?id=${id}&s=${Changedseasons} &e=${Changedepisode}`);
+            tvshow.setAttribute("src", `https://www.2embed.to/embed/tmdb/tv?id=${id}&s=${Changedseasons}&e=${Changedepisode}`);
             backdrop.setAttribute("style", `background-image: url(${IMG_URL_large + data.backdrop_path})`);
         });
 }
@@ -151,14 +115,9 @@ function showMovies() {
             const EpisodeObj = seasonObj.episode_number;
             console.log(data.last_episode_to_air);
 
-            for (let i = 0; i < data.genres.length; i++) {
 
+            const { poster_path, name, overview, first_air_date, vote_average, genres } = data;
 
-            }
-
-            const {poster_path, name, overview, first_air_date, vote_average, genres} = data;
-
-            console.log(genres);
 
             const movieEl = document.createElement("div");
             movieEl.classList.add("col-md-12");
@@ -221,7 +180,7 @@ function tvshow_getRec() {
             console.log(data);
             data.results.map((item, index) => {
                 console.log(item);
-                const {poster_path, name, vote_average,id} = item;
+                const { poster_path, name, vote_average, id } = item;
                 const movieEl = document.createElement("div");
                 movieEl.classList.add("col-md-3", "col-sm-6", "col-6");
                 movieEl.style = "margin-bottom: 20px";
@@ -252,7 +211,8 @@ function tvshow_getRec() {
 
 tvshow_getRec();
 
-async function sendWatchList() {
+
+function sendWatchList() {
     if (localStorage.getItem("Watchlist") == null) {
         localStorage.setItem("Watchlist", "[]");
     }
@@ -285,12 +245,11 @@ async function sendWatchList() {
 sendWatchList();
 
 function sendRecommended() {
-
     if (localStorage.getItem("Recommended") == null) {
         localStorage.setItem("Recommended", "[]");
     }
 
-    recommend.addEventListener("click", function (e) {
+    recommend.addEventListener("click", (e) => {
         e.preventDefault();
 
         const StoredRecommended = JSON.parse(localStorage.getItem("Recommended"));
@@ -319,3 +278,4 @@ function sendRecommended() {
 }
 
 sendRecommended();
+

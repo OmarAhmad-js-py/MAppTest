@@ -99,11 +99,6 @@ const prev = document.getElementById("prev")
 const next = document.getElementById("next")
 const current = document.getElementById("current")
 
-
-
-
-
-
 let currentPage = 1;
 let NextPage = 2;
 let prevPage = 3;
@@ -113,17 +108,23 @@ let totalpages = 100;
 
 let selectedGenre = [];
 setGenre();
+
+
 function setGenre() {
     tagsEl.innerHTML = '';
+    // foreach loop to create a div for each genre
     genres.forEach(genre => {
         const t = document.createElement('div');
         t.classList.add('tag');
         t.id = genre.id;
         t.innerText = genre.name;
+        // add event listener to each div
         t.addEventListener('click', () => {
+            // if selectedGenre is empty, add the id of the genre to the array
             if (selectedGenre.length === 0) {
                 selectedGenre.push(genre.id);
             } else {
+                // if the genre is already selected, remove it from the array
                 if (selectedGenre.includes(genre.id)) {
                     selectedGenre.forEach((id, idx) => {
                         if (id === genre.id) {
@@ -135,6 +136,7 @@ function setGenre() {
                 }
             }
             console.log(selectedGenre)
+            // call the getMovies function with the selected genre
             console.log(encodeURI(selectedGenre.
                 join(',')))
             getMovies(API_URL + '&with_genres=' + encodeURI(selectedGenre.
@@ -142,18 +144,20 @@ function setGenre() {
             highlightSelections();
 
         })
+        // append the div to the tags element
         tagsEl.append(t);
     })
 }
 
 function highlightSelections() {
+    // highlight the selected genre and remove the highlight from the unselected genres 
     const tags = document.querySelectorAll(".tag");
     tags.forEach(tag => {
         tag.classList.remove('highlight');
     })
     ClearBtn()
+    // if the selectedGenre array is not empty, highlight the selected genres
     if (selectedGenre.length !== 0) {
-
         selectedGenre.forEach(id => {
             const highlightTag = document.getElementById(id);
             highlightTag.classList.add('highlight');
@@ -161,27 +165,17 @@ function highlightSelections() {
     }
 }
 function ClearBtn() {
-    let ClearBtn = document.getElementById("clear");
-    if (ClearBtn) {
-        ClearBtn.classList.add('highlight');
+    const ClearBtn = document.getElementById("clear");
+    // Clear the entire selection and return to the original page 
+    ClearBtn.addEventListener("click", () => {
+        selectedGenre = [];
+        setGenre();
+        getMovies(API_URL);
+    })
 
-    } else {
-        let clear = document.createElement("div");
-        clear.classList.add("tag", "highlight");
-        clear.id = "clear";
-        clear.innerText = "Clear";
-        clear.addEventListener("click", () => {
-            selectedGenre = [];
-            setGenre();
-            getMovies(API_URL);
-        })
-        tagsEl.append(clear)
-    }
 }
 
 getMovies(API_URL);
-
-
 
 
 function getMovies(url) {
@@ -189,15 +183,17 @@ function getMovies(url) {
     fetch(url)
         .then((res) => res.json())
         .then((data) => {
+
             console.log(data.results);
+            // if the data.results array is not empty, call the showMovies function
             if (data.results.length !== 0) {
                 showMovies(data.results);
                 currentPage = data.page;
                 NextPage = currentPage + 1;
                 prevPage = currentPage - 1;
                 totalpages = data.total_pages;
-
                 current.innerText = currentPage;
+                // if the current page is the first page, disable the previous button
                 if (currentPage <= 1) {
                     prev.classList.add('disabled');
                     next.classList.remove("disabled")
@@ -218,6 +214,7 @@ function showMovies(data) {
     main.innerHTML = " ";
 
     data.forEach((movie) => {
+        // destructure the movie object
         const { title, release_date, vote_average, overview, poster_path, id } = movie;
 
         const movieEl = document.createElement("div");
@@ -249,25 +246,27 @@ function showMovies(data) {
         </p>
       </div>    
     `;
-
+        // add event listener to each movie
         mainEl.appendChild(movieEl);
         document.getElementById(id).addEventListener("click", () => {
             console.log(id);
-            const movieid = [];
             window.location.href = "/singlemovie?id=" + id;
         })
     });
 }
 
 
-
 search.addEventListener("keyup", () => {
+    // get the value of the search input
     const searchTerm = search.value;
     if (searchTerm) {
         getMovies(searchURL + '&query=' + searchTerm);
     }
+    // if the search term is empty, return to the original page
+    else {
+        getMovies(API_URL);
+    }
 });
-
 
 
 next.addEventListener("click", () => {
@@ -284,13 +283,18 @@ prev.addEventListener("click", () => {
 
 
 function pageCall(page) {
+    // get the last url and split it into an array by th ? symbol
     let urlsplit = lastUrl.split('?');
+    // split the second element of the array by the & symbol
     let queryParams = urlsplit[1].split('&');
+    // get the last element of the array and split it by the = symbol
     let key = queryParams[queryParams.length - 1].split('=');
+    // if the key is not equal to page, add the page number to the url
     if (key[0] !== "page") {
         let url = lastUrl + "&page=" + page
         getMovies(url)
     } else {
+        // if the key is equal to page, replace the page number with the new page number
         key[1] = page.toString();
         let a = key.join('=');
         queryParams[queryParams.length - 1] = a;

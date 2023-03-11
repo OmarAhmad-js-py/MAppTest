@@ -20,6 +20,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <a class="navbar-brand" href="/"><img src="../logo.png" alt="logo" /></a>
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
@@ -53,40 +54,20 @@
                   <input id="file" type="file" name="profileImg" accept="image/*" />
                 </form>
                 {{#if user.profile_img}}
-                <img src="{{user.profile_img}}" id="output" width="200" />
+                <img src="" id="output" width="200" />
                 {{else}}
                 <img src="../avatar.png" id="output" width="200" />
                 {{/if}}
               </div>
 
               <div class="mt-3">
-                <h4>{{user.name}}
-
-
-                </h4>
+                <h4>{{user.name}}</h4>
                 <p class="text-secondary mb-1">Full Stack Developer</p>
                 <p class="text-muted font-size-sm">Bay Area, San Francisco,
                   CA</p>
-                <button class="btn btn-primary">Follow</button>
-                <button class="btn btn-outline-primary">Message</button>
               </div>
-              <div class="mt-4">
-
-                <input form="myform" type="submit" class="btn btn-primary">
-
-              </div>
-
             </div>
           </div>
-          <div class="card mt-3" id="Bio">
-            <h1 class="card-title mb-1 text-center text-muted">Create a Room</h1>
-            <div class="mb-4 mt-5" align="center">
-              <Button type="button" class="btn btn-secondary" id="roomBtn" href="#">Create</Button>
-            </div>
-          </div>
-
-
-
         </div>
         <div class="col-md-8">
           <div class="card mb-3 rounded-img ">
@@ -114,7 +95,7 @@
                   <h6 class="mb-0">Joined</h6>
                 </div>
                 <div class="col-sm-9 text-secondary">
-                  {{user.Joined}}
+                  {{user.joined}}
                 </div>
               </div>
               <hr />
@@ -151,14 +132,10 @@
     </div>
   </div>
 
-  </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
     integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
     crossorigin="anonymous"></script>
   <script src="profile.js"></script>
-  <script src="indexScript.js"></script>
 </body>
 
 </html>

@@ -2,7 +2,6 @@ const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_URL = BASE_URL + "/tv/";
 const IMG_size = "https://image.tmdb.org/t/p/w500";
-const searchURL = BASE_URL + '/search/tv?' + API_KEY;
 
 
 
@@ -17,19 +16,19 @@ const prev = document.getElementById("prev")
 const next = document.getElementById("next")
 const current = document.getElementById("current")
 
-const video1 = document.getElementById("video1")
+
 
 
 getwatchlistData();
 function getwatchlistData() {
-  const uri = '/Wathclater'
+  const uri = '/Watchlater'
   let h = new Headers();
   h.append('Accept', 'application/json')
 
   let req = new Request(uri, {
     method: 'GET',
     headers: h,
-    mode: 'cors'
+    mode: 'cors',
   });
 
   fetch(req)
@@ -45,25 +44,36 @@ function getwatchlistData() {
 
 
 function getWatchlist(data) {
-  const watchUID = JSON.parse(data.Watchlist);
+  const watchlist = data
+  console.log(watchlist)
   const watchlistdata = []
 
-  watchUID.forEach((moive) => {
+  data.forEach((ids) => {
+    console.log(ids)
+    if (ids.includes('tt')) {
+      console.log('movie')
+      fetch(BASE_URL + "/movie/" + ids + '?' + API_KEY + '&language=en-US')
+        .then((res) => res.json())
+        .then((Tvshowdata) => {
+          console.log(Tvshowdata)
+          watchlistdata.push(Tvshowdata)
+          showWatchlist(watchlistdata)
+        })
+    } else {
+      fetch(API_URL + ids + '?' + API_KEY + '&language=en-US&external_source=imdb_id')
+        .then((res) => res.json())
+        .then((Tvshowdata) => {
+          console.log(Tvshowdata)
+          watchlistdata.push(Tvshowdata)
+          showWatchlist(watchlistdata)
+        })
+    }
 
-    fetch(API_URL + moive + '?' + API_KEY + '&language=en-US')
-      .then((res) => res.json())
-      .then((Tvshowdata) => {
-        watchlistdata.push(Tvshowdata)
-
-        showWatchlist(watchlistdata, watchUID)
-      })
 
   })
-
-
 }
 
-function showWatchlist(watchlistdata, watchUID) {
+function showWatchlist(watchlistdata) {
   mainEl.innerHTML = " ";
   const delTMD = []
 
@@ -72,7 +82,7 @@ function showWatchlist(watchlistdata, watchUID) {
   watchlistdata.forEach((movie) => {
     const watchlist = []
 
-    const { name, first_air_date, vote_average, overview, poster_path, id } = movie;
+    const { name, title, first_air_date, release_date, vote_average, overview, poster_path, id } = movie;
     delTMD.push(movie)
 
     const movieEl = document.createElement("div");
@@ -85,19 +95,17 @@ function showWatchlist(watchlistdata, watchUID) {
           <img 
           style="height: auto; width: 100%;"  src="${poster_path ? IMG_size + poster_path : "https://via.placeholder.com/500x750"}"
           />
-          
           </div>
-       
       </div>
       <div class="movie-content">
         <h2>
           <a href="/singletvshow" id="${id}" class="link_video"
-            >${name}</a
+            >${name ? name : title}</a
           >
         </h2>
         <span class="movie-meta">
           <span class="movie-meta-item"
-            ><i class="fas fa-clock"></i> ${first_air_date}</span
+            ><i class="fas fa-clock"></i> ${first_air_date ? first_air_date : release_date}</span
           >
           <a href="#" class="movie-meta-item"
             ><i class="fas fa-star"></i> ${vote_average}</a
@@ -123,8 +131,9 @@ function showWatchlist(watchlistdata, watchUID) {
     })
     document.getElementById(delTMD).addEventListener("click", () => {
       const ids = []
-      ids.push(JSON.parse(movie.id))
-      console.log(JSON.stringify(ids))
+      console.log(movie.id)
+      const id = movie.id && movie.imdb_id ? movie.imdb_id : movie.id
+      ids.push(id)
       const StoredWatchlist = JSON.parse(localStorage.getItem("Watchlist"))
       const changed = StoredWatchlist.splice(ids, 1)
       console.log(JSON.stringify(changed))
@@ -142,15 +151,9 @@ function showWatchlist(watchlistdata, watchUID) {
         console.log(res.message);
 
       })
-      window.location.reload();
-
+      window.location.reload()
 
     })
-
-
-
-
-
 
   })
 }
