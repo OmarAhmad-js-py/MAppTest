@@ -1,5 +1,5 @@
 const id = localStorage.getItem("id");
-const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
+const API_KEY = ;
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_URL = BASE_URL + "/discover/tv?sort_by=popularity.desc&" + API_KEY;
 const IMG_URL = "https://image.tmdb.org/t/p/w300";
