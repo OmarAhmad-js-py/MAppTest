@@ -1,7 +1,7 @@
 const id = window.location.href.split('=')[1]
 let imdb_id;
-console.log("hello")
-const API_KEY = "api_key=0a2c754df24f03f4197199045aedf7de";
+
+const API_KEY = ;
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w300";
 const IMG_URL_large = "https://image.tmdb.org/t/p/w1280";
